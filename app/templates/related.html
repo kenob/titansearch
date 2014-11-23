@@ -1,0 +1,9 @@
+{%extends 'base.html'%}
+
+{%block content%}
+{% for result in related_news%}
+<h2>{{result.title}}</h2>
+<p>{{result.snippet}}</p>
+<p><a href="{{result.url}}">{{result.url}}</a></p>
+{%endfor %}
+{%endblock%}

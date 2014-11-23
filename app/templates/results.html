@@ -1,0 +1,9 @@
+{%extends 'base.html'%}
+
+{%block content%}
+{% for result in search_results%}
+<h2><a href={{ url_for('related', result_id = result.id) }}>{{result.title}}</a></h2>
+<p>{{result.snippet}}</p>
+<p><a href="{{result.url}}">{{result.url}}</a></p>
+{%endfor %}
+{%endblock%}

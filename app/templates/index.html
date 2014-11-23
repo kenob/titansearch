@@ -1,0 +1,14 @@
+{%extends "base.html"%}
+
+{% block content %}
+      {{ form.hidden_tag() }}
+
+<h2>Search Wikipedia here:</h2>
+<form action="{{ url_for('results') }}" method = "post" name = "search">
+			{{form.query(size=100)}}
+          {% for error in form.query.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}<br>
+<input type = "submit" value="Search">
+</form >
+{% endblock %}
