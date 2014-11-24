@@ -23,7 +23,7 @@ def refresh_index(corpus_type="NYC"):
 			print status_response["statusMessages"][""]
 			break
 		time.sleep(10)
-		print "processed %s documents, still working..." % status_response["statusMessages"]["Total Documents Processed"]
+		print "still working..."
 
 
 if __name__=="__main__":
