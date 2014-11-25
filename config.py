@@ -1,2 +1,5 @@
 WTF_CSRF_ENABLED = True
 SECRET_KEY = 'you-will-never-guess'
+SOLR_URI = 'http://localhost:8983/solr/'
+NEWS_COLLECTION_INSTANCE = 'newsArticleCollection'
+SOLR_NEWSCOLLECTION = SOLR_URI + NEWS_COLLECTION_INSTANCE
