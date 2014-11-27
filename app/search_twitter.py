@@ -49,9 +49,13 @@ def search_twitter(search_term):
     results = []
     if (u'statuses' in jsonresponse):
         statuses = jsonresponse[u'statuses']
-        count = 0
-        for status in statuses:
-            results.append(status[u'text'])  
+        tweet_count = 0
+        if(len(statuses) > 3):
+            tweet_count = 3;
+        else:
+            tweet_count = len(statuses);
+        for i in xrange(tweet_count):
+            results.append(statuses[i][u'text'])  
 
         # for result in results:
         #     print result

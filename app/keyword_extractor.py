@@ -27,7 +27,8 @@ def extract_keywords(body_text):
 
 	if not 'annotations' in data:
 		return dict(status=True, keywords=[])
-
+	for word in [datum['spot'] for datum in data['annotations']]:
+		print word
 	return dict(status=True, keywords=[datum['spot'] for datum in data['annotations']])
 	
 
