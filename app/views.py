@@ -3,11 +3,8 @@ from flask import render_template, request, url_for, redirect
 from .forms import SearchForm
 from utils import search, get_item, parse_to_alphanumeric, clean_wiki
 from .keyword_extractor import extract_keywords
-<<<<<<< HEAD
 from .wiki_extractor import clean
-=======
 from .search_twitter import search_twitter
->>>>>>> 6765e5a8338bc7b50e96c1f3d22a26f9d51d44a8
 
 
 #TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
