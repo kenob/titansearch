@@ -1,9 +1,13 @@
 {%extends 'base.html'%}
 
 {%block content%}
+<h1>Wikipedia - {{wiki_article.title}}</h1>
+<p>{{wiki_article.snippet}}</p>
+<p><a href="{{wiki_article.url}}">{{wiki_article.url}}</a></p>
+<h2> Related News Items </h2>
 {% for result in related_news%}
-<h2>{{result.title}}</h2>
-<p>{{result.snippet}}</p>
-<p><a href="{{result.url}}">{{result.url}}</a></p>
+	<h><a href="{{result['links'][0]}}" target="_blank">{{result.get('title',[])[0]}}</a></h>
+	<p>{{result.get('news_body',[])[0]}}</p>
 {%endfor %}
+
 {%endblock%}

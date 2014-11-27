@@ -1,6 +1,7 @@
-from app import application;
-from flask import render_template;
-from .forms import SearchForm;
+from app import application, news, wiki
+from flask import render_template
+from .forms import SearchForm
+from utils import search, get_item
 
 @application.route('/')
 @application.route('/index')
@@ -16,7 +17,35 @@ def results():
 
 @application.route('/related/<result_id>')
 def related(result_id):
-	related_news = [{'id':'001','title':'Java jobs are in high demand','snippet':'Java developers in .....', 'url':'http://www.washingtonpost.com/what-developers-will-be-doing-learning-and-listening-to-in-2012-survey-results/2012/01/11/gIQA8VuxqP_story.html'},
-					{'id':'002','title':'Python jobs are in high demand','snippet':'Python developers in .....', 'url':'http://www.washingtonpost.com/local/education/u-va-president-suspends-fraternities-until-jan-9-in-wake-of-rape-allegations/2014/11/22/023d3688-7272-11e4-8808-afaa1e3a33ef_story.html?tid=trending_strip_5'}]
-	related_tweets = [];
-	return render_template('related.html',related_news = related_news, related_tweets = related_tweets);
+	related_news = []
+	related_tweets = []
+	wiki_article = dict(keywords=["Baseball", "Emmy"], 
+						snippet='''Baseball (1994) is an 18 hour, 
+									Emmy Award-winning documentary series by Ken 
+									Burns about the game of baseball. First broadcast on PBS, 
+									this was Burns' ninth documentary.
+								''',
+						title='Baseball documentary',
+		 				id='001',
+		 				url="http://en.wikipedia.org/wiki/Baseball_%28TV_series%29")
+
+	#This will work properly only when the wiki article config has been set and the solr instance has been integrated properly
+	#But as per the project specs, errors have already been handled in utils.py
+	wiki_article_solr = get_item(wiki, result_id)
+	if wiki_article_solr:
+		wiki_article = wiki_article_solr
+		
+	query_terms = []
+
+	for t in wiki_article.get('keywords',[]):
+		query_terms += t.split()
+
+	query_term = "+".join(query_terms)
+
+	news_articles = search(news, query_term)
+
+	if news_articles:
+		#TODO: remove the list comprehension, it was just for design purposes
+		related_news = [news_article for news_article in news_articles if news_article.get('news_body')]
+
+	return render_template('related.html',**locals());

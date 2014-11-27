@@ -1,5 +1,5 @@
 from flask.ext.script import Manager
-from app import application
+from app import application, wiki, news
 import os
 from urllib import *
 import json
@@ -15,8 +15,12 @@ def runserver():
 	application.run(debug = True)
 
 @manager.command
-def refresh_index(corpus_type="NYC"):
-	base_url = application.config.get('SOLR_NEWSCOLLECTION')
+def refresh_index(instance):
+	base_url = application.config.get('SOLR_URI') + news
+
+	if instance=='wiki':
+		base_url = application.config.get('SOLR_URI') + wiki
+
 	try:
 		r = requests.get('%s/dataimport?command=full-import' % base_url)
 		print "Started indexing"
@@ -30,7 +34,7 @@ def refresh_index(corpus_type="NYC"):
 			status_response = eval(status_conn.read())
 			stat = status_response["statusMessages"].get("Total Documents Processed",False)
 			if stat:
-				print "... %s documents processed" % stat			
+				print "... processing %s documents" % stat			
 			if status_response['status'] is 'idle':
 				print "\n", status_response["statusMessages"][""]
 				break
