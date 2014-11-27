@@ -3,7 +3,11 @@ from flask import render_template, request, url_for, redirect
 from .forms import SearchForm
 from utils import search, get_item, parse_to_alphanumeric, clean_wiki
 from .keyword_extractor import extract_keywords
+<<<<<<< HEAD
 from .wiki_extractor import clean
+=======
+from .search_twitter import search_twitter
+>>>>>>> 6765e5a8338bc7b50e96c1f3d22a26f9d51d44a8
 
 
 #TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
@@ -64,14 +68,18 @@ def related(result_id):
 	keywords = extract_keywords(tx).get('keywords')		
 	query_terms = []
 
-
+	twitter_query = "";
+	#TODO: Summarize wikipedia articles for display
 	#since we are favoring precision over recall
 	if len(keywords) > 1:
 		for t in keywords:
 			query_terms += t.split()
 		query_term = "+".join(query_terms)
-		news_articles = search(news, query_term)
+		twitter_query = " OR ".join(query_terms)
 
+		news_articles = search(news, query_term)
+	statuses = search_twitter(twitter_query) ;
+	
 	if news_articles:
 		news_articles = news_articles[0]
 		#TODO: remove the list comprehension, it was just for design purposes
