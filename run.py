@@ -11,6 +11,7 @@ manager = Manager(application)
 
 @manager.command
 def runserver():
+	from app import views
 	application.run(debug = True)
 
 @manager.command
