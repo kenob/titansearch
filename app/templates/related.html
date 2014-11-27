@@ -9,5 +9,8 @@
 	<h><a href="{{result['links'][0]}}" target="_blank">{{result.get('title',[])[0]}}</a></h>
 	<p>{{result.get('news_body',[])[0]}}</p>
 {%endfor %}
-
+<h1>Tweets</h1>
+{% for status in statuses%}
+	<p>{{status}}</p>
+{%endfor %}
 {%endblock%}

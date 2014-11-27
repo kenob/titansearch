@@ -36,8 +36,7 @@ def twitterRequest(url, method, parameters):
 
     return response
 
-def main():
-    search_term = str(raw_input("Enter the search term : "))
+def search_twitter(search_term):
     url = "https://api.twitter.com/1.1/search/tweets.json?q="+search_term
 
 
@@ -48,14 +47,20 @@ def main():
 
 
     results = []
-    statuses = jsonresponse[u'statuses']
-    count = 0
-    for status in statuses:
-        results.append(status[u'text'])  
+    if (u'statuses' in jsonresponse):
+        statuses = jsonresponse[u'statuses']
+        count = 0
+        for status in statuses:
+            results.append(status[u'text'])  
 
-    for result in results:
-        print result
-    return results
+        # for result in results:
+        #     print result
+        return results
+    return results;
+
+def main():
+    search_term = str(raw_input("Enter the search term : "))
+    search_twitter(search_term);
 
 
 
