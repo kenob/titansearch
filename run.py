@@ -1,17 +1,17 @@
 from flask.ext.script import Manager
-from app import application, wiki, news
+from app import application, wiki, news, keyword_extractor
 import os
 from urllib import *
-import json
-import time
-import requests
-from app import keyword_extractor
+import json, time, requests
+from app.resources import api
+
 
 manager = Manager(application)
 
 @manager.command
 def runserver():
 	from app import views
+	api.init_app(application)
 	application.run(debug = True)
 
 @manager.command
