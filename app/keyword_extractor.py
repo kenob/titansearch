@@ -14,7 +14,7 @@ Hubble is the only telescope designed to be serviced in space by astronauts. Aft
 
 
 def extract_keywords(body_text):
-	precision = 0.9;
+	precision = 0.85;
 	app_key = '9be64884189dc6bfb19e341ee93a48b7'
 	app_id = 'af1ed7e7'
 	params = urllib.urlencode({'lang': 'en', 'text': body_text, 'min_confidence' : precision,  'include' :'types,abstract,categories,lod','$app_id': app_id, '$app_key' : app_key   })
@@ -28,7 +28,7 @@ def extract_keywords(body_text):
 	if not 'annotations' in data:
 		return dict(status=True, keywords=[])
 
-
+	print [datum['spot'] for datum in data['annotations']];
 	return dict(status=True, keywords=[datum['spot'] for datum in data['annotations']])
 	
 
