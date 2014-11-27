@@ -1,48 +1,60 @@
 from app import application, news, wiki
-from flask import render_template
+from flask import render_template, request, url_for, redirect
 from .forms import SearchForm
-from utils import search, get_item
+from utils import search, get_item, parse_to_alphanumeric
+from .keyword_extractor import extract_keywords
 
-@application.route('/')
-@application.route('/index')
+
+#TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
+@application.route('/', methods=['GET', 'POST'])
+@application.route('/index', methods=['GET', 'POST'])
 def index():
 	form = SearchForm();
+	if form.validate_on_submit():
+		return redirect(url_for('results', q=form.query.data))
 	return render_template('index.html', form = form);
 
 @application.route('/results', methods=['GET', 'POST'])
 def results():
-	search_results = [{'id':'001','title':'Java', 'snippet':'Java is a programming language', 'url':'http://en.wikipedia.org/wiki/Java_%28programming_language%29'},
-					{'id':'002','title':'Microsoft', 'snippet':'Microsoft is a software company.', 'url':'http://en.wikipedia.org/wiki/Microsoft'}];
-	return render_template('results.html', search_results = search_results);
+	qt = request.args.get('q')
+	query_terms = qt.split()
+	query_term = "+".join(query_terms)
+	search_results = search(wiki, query_term, hl="true")
+
+	error_message = "No results found for your search!"
+
+	if search_results:
+		if len(search_results)>1:
+			error_message = ""
+			for res in search_results:
+				res['wiki_body'] = parse_to_alphanumeric(res['wiki_body'][0])
+
+	return render_template('results.html', **locals());
 
 @application.route('/related/<result_id>')
 def related(result_id):
 	related_news = []
 	related_tweets = []
-	wiki_article = dict(keywords=["Baseball", "Emmy"], 
-						snippet='''Baseball (1994) is an 18 hour, 
-									Emmy Award-winning documentary series by Ken 
-									Burns about the game of baseball. First broadcast on PBS, 
-									this was Burns' ninth documentary.
-								''',
-						title='Baseball documentary',
-		 				id='001',
-		 				url="http://en.wikipedia.org/wiki/Baseball_%28TV_series%29")
+	wiki_article = dict()
+	news_articles = []
 
-	#This will work properly only when the wiki article config has been set and the solr instance has been integrated properly
-	#But as per the project specs, errors have already been handled in utils.py
 	wiki_article_solr = get_item(wiki, result_id)
 	if wiki_article_solr:
 		wiki_article = wiki_article_solr
-		
+
+	tx = parse_to_alphanumeric(wiki_article.get('wiki_body',['hello world'])[0])
+
+	keywords = extract_keywords(tx).get('keywords')		
 	query_terms = []
 
-	for t in wiki_article.get('keywords',[]):
-		query_terms += t.split()
+	#TODO: Summarize wikipedia articles for display
 
-	query_term = "+".join(query_terms)
-
-	news_articles = search(news, query_term)
+	#since we are favoring precision over recall
+	if len(keywords) > 1:
+		for t in keywords:
+			query_terms += t.split()
+		query_term = "+".join(query_terms)
+		news_articles = search(news, query_term)
 
 	if news_articles:
 		#TODO: remove the list comprehension, it was just for design purposes

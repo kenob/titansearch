@@ -13,17 +13,21 @@ Space telescopes were proposed as early as 1923. Hubble was funded in the 1970s,
 Hubble is the only telescope designed to be serviced in space by astronauts. After launch by Space Shuttle Discovery in 1990, four subsequent Space Shuttle missions repaired, upgraded, and replaced systems on the telescope. A fifth mission was canceled on safety grounds following the Columbia disaster. However, after spirited public discussion, NASA administrator Mike Griffin approved one final servicing mission, completed in 2009. The telescope is still operating as of 2014, and may last until 2020.[6] Its scientific successor, the James Webb Space Telescope (JWST), is scheduled for launch in 2018.'''
 
 
-def extract_keywords(body_text=text):
+def extract_keywords(body_text):
 	precision = 0.9;
 	app_key = '9be64884189dc6bfb19e341ee93a48b7'
 	app_id = 'af1ed7e7'
 	params = urllib.urlencode({'lang': 'en', 'text': body_text, 'min_confidence' : precision,  'include' :'types,abstract,categories,lod','$app_id': app_id, '$app_key' : app_key   })
-	
+	data = dict()
 	try:
 		response = urllib.urlopen("https://api.dandelion.eu/datatxt/nex/v1/?%s" % params)
 		data = json.load(response)
 	except:
 		return dict(status=False, keywords=[])
+
+	if not 'annotations' in data:
+		return dict(status=True, keywords=[])
+
 
 	return dict(status=True, keywords=[datum['spot'] for datum in data['annotations']])
 	

@@ -1,5 +1,6 @@
 from app import application
 from urllib import *
+import re
 
 base_url = application.config.get('SOLR_URI')
 
@@ -21,3 +22,8 @@ def get_item(collection, _id, **kwargs):
 		return result['doc']
 	except:
 		return False
+
+def parse_to_alphanumeric(input_string):   
+   pattern = re.compile('[\W_]+')
+   ret = pattern.sub(" ", input_string)
+   return ret

@@ -1,8 +1,8 @@
 {%extends 'base.html'%}
 
 {%block content%}
-<h1>Wikipedia - {{wiki_article.title}}</h1>
-<p>{{wiki_article.snippet}}</p>
+<h1>Wikipedia - {{wiki_article.title[0]}}</h1>
+<p>{{wiki_article.wiki_body[0]}}</p>
 <p><a href="{{wiki_article.url}}">{{wiki_article.url}}</a></p>
 <h2> Related News Items </h2>
 {% for result in related_news%}
