@@ -138,7 +138,7 @@ def WikiDocument(out, id, title, text, get_keywords):
     keywords = []
 
     if get_keywords:
-        keywords = extract_keywords(clean_text).get('keywords', [])  
+        keywords = extract_keywords(clean_text.encode('utf-8')).get('keywords', [])  
 
     kws = (', ').join(keywords) 
 
