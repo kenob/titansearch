@@ -5,9 +5,24 @@
         <h4 class="modal-title" id="myModalLabel">{{currentArticle.wiki_article.title[0]}}</h4>
       </div>
       <div class="modal-body">
-			<p>{{currentArticle.wiki_article.wiki_body[0]}}</p>    
-
-
+			<p>{{currentArticle.wiki_article.wiki_body[0]}}</p> 
+	<div>
+	<h5>Related News</h5>
+		<ul ng-repeat="news in currentArticle.related_news">
+			<li>
+				<h><a href="{{result.links[0]}}" target="_blank">{{result.title[0]}}</a></h>
+				<p>{{result.news_body[0]}}</p>>
+			</li>
+		</ul>
 	</div>
+	<div>
+	<h5>Related Tweets</h5>
+		<ul ng-repeat="tweet in currentArticle.related_tweets">
+			<li>
+			<p>{{tweet}}</p>
+			</li>
+		</ul>
+	</div>
+  </div>
   </div>
   </div>
