@@ -5,6 +5,7 @@ from .keyword_extractor import extract_keywords
 from app import application, news, wiki, logger
 from flask.ext.restful import reqparse
 from json import dumps
+from .search_twitter import search_twitter
 
 
 api = restful.Api()
@@ -84,6 +85,7 @@ class SearchResult(restful.Resource):
 		wiki_article = dict()
 		news_articles = []
 
+		logger.info("here!")
 		wiki_article_solr = get_item(wiki, result_id)
 		if wiki_article_solr:
 			wiki_article = wiki_article_solr

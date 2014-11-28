@@ -2,9 +2,9 @@
 <p>Search Results for "<span style="color:red">{{query_term}}</span>"</p>
 
 <div ng-repeat="result in search_results">
-<h2><a ui-sref='home'>{{result.title[0]}}</a></h2>
+<h2  data-toggle="modal" data-target="#myModal"><a ui-sref=".related({doc_id : result.id})">{{result.title[0]}}</a></h2>
 <p><div ng-bind-html="result.wiki_body"></div></p>
-<p><a ui-sref="{{result.links[0]}}">View this article on Wikipedia</a></p>
+<p><a href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></p>
 </div>
 <p>
 Current Page: {{ current_page }}<br          />
@@ -12,3 +12,9 @@ Current Page: {{ current_page }}<br          />
 <button ng-show="has_next" ng-click="change('next')">Next</button>
 </p>
 <p ng-bind="error_message"></p>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div ui-view>
+		Loading...
+	</div>
+</div>

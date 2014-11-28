@@ -18,8 +18,9 @@ results.controller = 'ResultsCtrl';
 states.push(results);
 
 var related = {}
-related.name = 'related';
-related.url = '/related';
+related.name = 'results.related';
+related.url = '/related/{doc_id}';
+related.parent = results;
 related.templateUrl = viewsPath + 'related.html';
 related.controller = 'RelatedCtrl';
 states.push(related);
@@ -43,15 +44,16 @@ angular.module('angularApp', [
 .factory('Search', function($resource){
   return $resource("/api/async/v1/");
 })
+.factory('SearchResult', function($resource){
+  return $resource("/api/async/v1/results/:id");
+})
 .filter('to_trusted', ['$sce', function($sce){
     return function(text) {
         return $sce.trustAsHtml(text);
     };
 }])
-.run(['$rootScope','$sce', function($rootScope, $sce){
-    $rootScope.TrustDangerousSnippet = function(snippet) {
-        return $sce.trustAsHtml(snippet);
-    };   
+.run(['$rootScope','$sce', '$state', function($rootScope, $sce, $state){
+    $rootScope.$state = $state;
 }]);
 
 
