@@ -46,7 +46,7 @@ class Search(restful.Resource):
 		if len(query_terms)>1:
 			query_term = "+".join(query_terms)
 
-		search_results = search(wiki, query_term, page=page, rows=rows, hl="true")
+		search_results = search(wiki, query_term, page=page, rows=rows)
 
 		error_message = "No results found for your search!"
 

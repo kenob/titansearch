@@ -41,10 +41,6 @@ def parse_to_alphanumeric(input_string):
 
 def clean_wiki(w_list):
 	logger.info("entry: %s" % w_list)
-	page=[]
-	res = "...".join(w_list)
-	res = clean(res)
-	p = re.compile("[\[[\]]\|\=]")
-	p.sub(" ", res)
-	return res
+	res = clean(w_list[0])
+	return [res]
 

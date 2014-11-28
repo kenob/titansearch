@@ -34,18 +34,15 @@ def results():
 			_id = res['id']
 			if _id in result_snippets:
 				try:
-					res['wiki_body'] = result_snippets[_id].get('wiki_body')
+					res['wiki_body'] = ("...").join(result_snippets[_id].get('wiki_body', []))
 				except:
 					del search_results[_id]
 			else:
 				del search_results[_id]
 
-		#remove junk here
 		if search_results:
-			if len(search_results)>1:
+			if len(search_results)>0:
 				error_message = ""
-				for res in search_results:
-					res['wiki_body'] = clean_wiki(res['wiki_body'])
 
 	return render_template('results.html', **locals());
 
@@ -60,13 +57,10 @@ def related(result_id):
 	if wiki_article_solr:
 		wiki_article = wiki_article_solr
 
-	tx = parse_to_alphanumeric(wiki_article.get('wiki_body',['hello world'])[0])
-
-	keywords = extract_keywords(tx).get('keywords')		
 	query_terms = []
 
 	twitter_query = "";
-	#TODO: Summarize wikipedia articles for display
+	keywords = wiki_article.get('keywords',[])
 	#since we are favoring precision over recall
 	if len(keywords) > 1:
 		for t in keywords:

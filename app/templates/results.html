@@ -4,7 +4,7 @@
 {%block content%}
 {% for result in search_results %}
 <h2><a href={{ url_for('related', result_id = result.id) }}>{{result.title[0]}}</a></h2>
-<p>{{result.wiki_body}}</p>
+<p>{{result.wiki_body | safe }}</p>
 <p><a href="{{result.url}}">{{result.url}}</a></p>
 {% endfor %}
 

@@ -4,6 +4,7 @@ import os
 from urllib import *
 import json, time, requests
 from app.resources import api
+from WikiExtractor import parse_wiki
 
 
 manager = Manager(application)
@@ -44,6 +45,13 @@ def refresh_index(instance):
 			if retries > 10:
 				print "Cannot Get status, please check your solr server"
 				break
+
+@manager.command
+def parse_wikimedia(input_file = "C:\Users\Keno\Documents\IR_3\wiki_data\Wikipedia-20141121065051.xml", 
+					output_dir="C:\Users\Keno\Documents\IR_3\wiki_data2"):
+
+	with open(input_file) as input_file:
+		parse_wiki(input_file, output_dir, 1024*1024)
 
 
 @manager.command
