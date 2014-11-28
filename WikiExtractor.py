@@ -63,7 +63,6 @@ import bz2
 import os.path
 from htmlentitydefs import name2codepoint
 from app.keyword_extractor import extract_keywords
-from app.utils import parse_to_alphanumeric
 import thread
 
 ### PARAMS ####################################################################
@@ -119,7 +118,7 @@ version = '2.5'
 
 ##### Main function ###########################################################
 
-def WikiDocument(out, id, title, text):
+def WikiDocument(out, id, title, text, get_keywords):
     url = get_url(id, prefix)
     header = '<doc id="%s" url="%s" title="%s">\n' % (id, url, title)
 
@@ -135,7 +134,12 @@ def WikiDocument(out, id, title, text):
     keyfooter = "</keywords>"
 
     clean_text = compact(text)
-    keywords = extract_keywords(clean_text).get('keywords', [])  
+
+    keywords = []
+
+    if get_keywords:
+        keywords = extract_keywords(clean_text).get('keywords', [])  
+
     kws = (', ').join(keywords) 
 
     out.reserve(len(header) + len(bodyhead) + len(text) + len(bodyfooter) + len(keyhead) + len(kws) + len(keyfooter) + len(footer))
@@ -584,7 +588,7 @@ class OutputSplitter:
 
 tagRE = re.compile(r'(.*?)<(/?\w+)[^>]*>(?:([^<]*)(<.*?>)?)?')
 
-def process_data(input, output):
+def process_data(input, output, get_keywords):
     global prefix
 
     page = []
@@ -625,7 +629,7 @@ def process_data(input, output):
                     not redirect:
                 print id, title.encode('utf-8')
                 sys.stdout.flush()
-                WikiDocument(output, id, title, ''.join(page))
+                WikiDocument(output, id, title, ''.join(page), get_keywords)
                 # thread.start_new_thread(WikiDocument, (output, id, title, ''.join(page)))
             id = None
             page = []
@@ -647,7 +651,7 @@ def show_usage(script_name):
 # Minimum size of output files
 minFileSize = 200 * 1024
 
-def parse_wiki(input_file, output_dir, file_size):
+def parse_wiki(input_file, output_dir, file_size, get_keywords):
     global keepLinks, keepSections, prefix, acceptedNamespaces
     # script_name = os.path.basename(sys.argv[0])
 
@@ -702,5 +706,5 @@ def parse_wiki(input_file, output_dir, file_size):
         ignoreTag('a')
 
     output_splitter = OutputSplitter(compress, file_size, output_dir)
-    process_data(input_file, output_splitter)
+    process_data(input_file, output_splitter, get_keywords)
     output_splitter.close()

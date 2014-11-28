@@ -87,7 +87,12 @@ class SearchResult(restful.Resource):
 		query_terms = []
 
 		twitter_query = "";
+
 		keywords = wiki_article.get('keywords',[])
+
+
+		if not application.config.get('INDEX_KEYWORD_GENERATION'):
+			keywords = extract_keywords(wiki_article['wiki_body'][0]).get('keywords')
 
 		#since we are favoring precision over recall
 		if len(keywords) > 1:
