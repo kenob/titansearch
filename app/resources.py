@@ -46,15 +46,27 @@ class Search(restful.Resource):
 		if len(query_terms)>1:
 			query_term = "+".join(query_terms)
 
-		search_results = search(wiki, query_term, page=page, rows=rows)
+		search_results_ = search(wiki, query_term, page=page, rows=rows)
 
 		error_message = "No results found for your search!"
 
+		if search_results_:
+			search_results = sear[0]
+			result_snippets = sear [1]
+			for res in search_results:
+				_id = res['id']
+				if _id in result_snippets:
+					try:
+						res['wiki_body'] = ("...").join(result_snippets[_id].get('wiki_body', []))
+					except:
+						del search_results[_id]
+				else:
+					del search_results[_id]
+
 		if search_results:
-			if len(search_results)>1:
+			if len(search_results)>0:
 				error_message = ""
-				for res in search_results:
-					res['wiki_body'] = parse_to_alphanumeric(res['wiki_body'][0])
+
 		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page), 200
 	def post(self,**kwargs):
 		return
@@ -72,25 +84,22 @@ class SearchResult(restful.Resource):
 		if wiki_article_solr:
 			wiki_article = wiki_article_solr
 
-		tx = parse_to_alphanumeric(wiki_article.get('wiki_body',['hello world'])[0])
-
-		keywords = extract_keywords(tx).get('keywords')		
 		query_terms = []
 
-		#TODO: Summarize wikipedia articles for display
+		twitter_query = "";
+		keywords = wiki_article.get('keywords',[])
 
 		#since we are favoring precision over recall
 		if len(keywords) > 1:
 			for t in keywords:
 				query_terms += t.split()
 			query_term = "+".join(query_terms)
+			twitter_query = " OR ".join(query_terms)
+
 			news_articles = search(news, query_term)
+		related_tweets = search_twitter(twitter_query) ;
 
-		if news_articles:
-			#TODO: remove the list comprehension, it was just for design purposes
-			related_news = [news_article for news_article in news_articles if news_article.get('news_body')]
-
-		return dict(related_news=related_news, wiki_article=wiki_article, related_tweets=related_tweets)
+		return dict(related_news=news_articles, wiki_article=wiki_article, related_tweets=related_tweets), 200
 	def post(self, **kwargs):
 		return
 

@@ -3,7 +3,7 @@
 {%block content%}
 <h1>Wikipedia - {{wiki_article.title[0]}}</h1>
 <p>{{wiki_article.wiki_body[0]}}</p>
-<p><a href="{{wiki_article.url}}">{{wiki_article.url}}</a></p>
+<p><a href="{{wiki_article.links[0]}}" target="_blank">View article on Wikipedia</a></p>
 <h2> Related News Items </h2>
 {% for result in related_news%}
 	<h><a href="{{result['links'][0]}}" target="_blank">{{result.get('title',[])[0]}}</a></h>

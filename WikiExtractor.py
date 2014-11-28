@@ -626,7 +626,7 @@ def process_data(input, output):
                 print id, title.encode('utf-8')
                 sys.stdout.flush()
                 WikiDocument(output, id, title, ''.join(page))
-                thread.start_new_thread(WikiDocument, (output, id, title, ''.join(page)))
+                # thread.start_new_thread(WikiDocument, (output, id, title, ''.join(page)))
             id = None
             page = []
         elif tag == 'base':
