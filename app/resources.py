@@ -92,7 +92,7 @@ class SearchResult(restful.Resource):
 
 
 		if not application.config.get('INDEX_KEYWORD_GENERATION'):
-			keywords = extract_keywords(wiki_article['wiki_body'][0]).get('keywords')
+			keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
 
 		#since we are favoring precision over recall
 		if len(keywords) > 1:
