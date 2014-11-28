@@ -20,7 +20,8 @@ def search(collection, query_string="*:*", page=1, rows=10, **kwargs):
 	try:
 		conn = urlopen('%s%s/select/?&q=%s&wt=python&%s' % (base_url, collection, query_string, additional_args))
 		result = eval(conn.read())
-		return result['response'].get('docs',[]), result.get('highlighting',dict())
+		results_left = int(result['response'].get('numFound')) - (start + rows)
+		return result['response'].get('docs',[]), result.get('highlighting',dict()), results_left
 	except:
 		return False
 

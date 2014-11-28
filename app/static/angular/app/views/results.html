@@ -1,0 +1,14 @@
+
+<p>Search Results for "<span style="color:red">{{query_term}}</span>"</p>
+
+<div ng-repeat="result in search_results">
+<h2><a ui-sref='home'>{{result.title[0]}}</a></h2>
+<p><div ng-bind-html="result.wiki_body"></div></p>
+<p><a ui-sref="{{result.links[0]}}">View this article on Wikipedia</a></p>
+</div>
+<p>
+Current Page: {{ current_page }}<br          />
+<button ng-show="has_previous" ng-click="change('previous')">Previous</button>
+<button ng-show="has_next" ng-click="change('next')">Next</button>
+</p>
+<p ng-bind="error_message"></p>

@@ -1,0 +1,29 @@
+{
+  "name": "angular",
+  "version": "0.0.0",
+  "dependencies": {
+    "angular-ui-router.stateHelper": "~1.2.0"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.0.7",
+    "angular-scenario": "~1.0.7"
+  },
+  "homepage": "https://github.com/dhineshns/wiki_on_the_internet",
+  "authors": [
+    "kenob1 <keno.ob@live.com>"
+  ],
+  "description": "search app",
+  "keywords": [
+    "custom"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/bower_components",
+    "test",
+    "tests"
+  ]
+}

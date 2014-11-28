@@ -2,7 +2,7 @@ from flask.ext import restful
 from flask import request, make_response
 from utils import search, get_item, parse_to_alphanumeric
 from .keyword_extractor import extract_keywords
-from app import application, news, wiki
+from app import application, news, wiki, logger
 from flask.ext.restful import reqparse
 from json import dumps
 
@@ -46,13 +46,17 @@ class Search(restful.Resource):
 		if len(query_terms)>1:
 			query_term = "+".join(query_terms)
 
+		search_results = None
 		search_results_ = search(wiki, query_term, page=page, rows=rows)
 
 		error_message = "No results found for your search!"
 
 		if search_results_:
-			search_results = sear[0]
-			result_snippets = sear [1]
+			search_results = search_results_[0]
+			result_snippets = search_results_[1]
+			has_next = search_results_[2] > 1
+			has_previous = (page - 1) > 0
+			logger.info(has_previous)
 			for res in search_results:
 				_id = res['id']
 				if _id in result_snippets:
@@ -67,7 +71,7 @@ class Search(restful.Resource):
 			if len(search_results)>0:
 				error_message = ""
 
-		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page), 200
+		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page, has_next=has_next, has_previous=has_previous), 200
 	def post(self,**kwargs):
 		return
 

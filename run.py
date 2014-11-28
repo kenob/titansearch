@@ -48,7 +48,7 @@ def refresh_index(instance):
 
 @manager.command
 def parse_wikimedia(input_file = "C:\Users\Keno\Documents\IR_3\wiki_data\Wikipedia-20141121065051.xml", 
-					output_dir="C:\Users\Keno\Documents\IR_3\wiki_data2"):
+					output_dir= "C:\Users\Keno\Documents\IR_3\wiki_data2"):
 	"""Parses and generates keywords from Wikimedia articles""" 
 	get_keywords = False
 	if application.config.get('INDEX_KEYWORD_GENERATION'):
