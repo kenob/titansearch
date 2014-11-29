@@ -8,12 +8,13 @@ from .search_twitter import search_twitter
 import urllib
 import json
 
-initial_query = "";
+global initial_query;	
 #TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
 @application.route('/', methods=['GET', 'POST'])
 @application.route('/index', methods=['GET', 'POST'])
 def index():
 	form = SearchForm();
+	global initial_query 
 	initial_query = form.query.data;
 	if form.validate_on_submit():
 		return redirect(url_for('results', q=form.query.data))
@@ -32,12 +33,10 @@ def results():
 	# for Did you mean? section
 	# http://localhost:8983/solr/wikiArticleCollection/spell?q=alternatie&wt=json&indent=true
 	params = urllib.urlencode({'q': initial_query, 'wt': "json", 'indent' : "true" })
-	try:
-		did_you_mean_json = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
-	except:
-		response = None;
+	
+	did_you_mean = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
 
-
+	did_you_mean_json = did_you_mean.read()
 
 	#currently returning only results that were highlighted
 	if sear:
