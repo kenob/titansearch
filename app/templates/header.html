@@ -11,14 +11,20 @@
             </div>
             <div class="collapse navbar-collapse">
             <div id="search-box" class="col-lg-3">
+            <form role="form" id="searchbar" method="post" action="/">
             <div class="input-group custom-search-form">
-              <input type="text" id="search-text" class="form-control">
+              {{form.csrf_token}}
+              {{form.query(id="search-text",class="form-control")}}
+              {% for error in form.query.errors %} 
+              <span style="color: red;">[{{ error }}]</span>
+              {% endfor%}
               <span class="input-group-btn">
-              <button id="search-button" class="btn btn-default" type="button"><!--change this for bg color-->
+              <button id="search-button" class="btn btn-default" type="submit" form="searchbar" formaction="/" formmethod="post"><!--change this for bg color-->
               <span class="glyphicon glyphicon-search"></span>
              </button>
              </span>
              </div><!-- /input-group -->
+             </form>
              </div>
             </div>
         </div>
