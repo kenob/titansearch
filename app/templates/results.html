@@ -1,13 +1,31 @@
 {%extends 'base.html'%}
-
-<h1> Search Results </h1>
 {%block content%}
-{% for result in search_results %}
-<h2><a href={{ url_for('related', result_id = result.id) }}>{{result.title[0]}}</a></h2>
-<p>{{result.wiki_body | safe }}</p>
-<p><a href="{{result.url}}">{{result.url}}</a></p>
-{% endfor %}
+{% include 'header.html' %}
 
-{{error_message}}
+<div class="container main">
+    <div class="row">
+        <div class="col-md-10" id="results">
+            {% if search_results %}
+            {% for result in search_results %}
+
+            <div>
+                <h2><a href={{ url_for('related', result_id = result.id) }}>{{result.title[0]}}</a></h2>
+
+                <p>{{result.wiki_body}}</p>
+
+                <p><a href="{{result.url}}">{{result.url}}</a></p>
+                <hr>
+            </div>
+            {% endfor %} 
+            {{error_message}}
+            
+            {% else %}
+            <div>
+                <h2>Sorry. No results found for your search.</h2>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 
 {%endblock%}

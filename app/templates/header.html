@@ -1,0 +1,26 @@
+{% block header %}
+
+       <header class="navbar navbar-inverse navbar-fixed-top wet-asphalt" role="banner">
+        <div class="container">
+            <div class="navbar-header">
+                <button id="search-button-small" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" ar xpanded="false" aria-controls="navbar">
+               <span class="sr-only">Toggle navigation</span>
+               <span class="glyphicon glyphicon-search" style="color:#fff"></span>
+               </button>
+                <a class="navbar-brand" href="/index"><img src="../static/images/logo.png" alt="logo"></a>
+            </div>
+            <div class="collapse navbar-collapse">
+            <div id="search-box" class="col-lg-3">
+            <div class="input-group custom-search-form">
+              <input type="text" id="search-text" class="form-control">
+              <span class="input-group-btn">
+              <button id="search-button" class="btn btn-default" type="button"><!--change this for bg color-->
+              <span class="glyphicon glyphicon-search"></span>
+             </button>
+             </span>
+             </div><!-- /input-group -->
+             </div>
+            </div>
+        </div>
+    </header><!--/header-->
+{% endblock %}
