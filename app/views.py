@@ -89,7 +89,8 @@ def related(result_id):
 		twitter_query = " OR ".join(query_terms)
 
 		news_articles = search(news, query_term)
-	statuses = search_twitter(twitter_query) ;
+	related_tweets = search_twitter(twitter_query) ;
+
 	print twitter_query;
 	if news_articles:
 		news_articles = news_articles[0]
