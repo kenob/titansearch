@@ -10,8 +10,8 @@
 	<h5>Related News</h5>
 		<ul ng-repeat="news in currentArticle.related_news">
 			<li>
-				<h><a href="{{result.links[0]}}" target="_blank">{{result.title[0]}}</a></h>
-				<p>{{result.news_body[0]}}</p>>
+				<h><a href="{{news.links[0]}}" target="_blank">{{news.title[0]}}</a></h>
+				<p>{{news.news_body[0]}}</p>
 			</li>
 		</ul>
 	</div>

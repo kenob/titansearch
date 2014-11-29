@@ -64,6 +64,7 @@ import os.path
 from htmlentitydefs import name2codepoint
 from app.keyword_extractor import extract_keywords
 import thread
+import os
 
 ### PARAMS ####################################################################
 
@@ -145,7 +146,11 @@ def WikiDocument(out, id, title, text, get_keywords):
     out.reserve(len(header) + len(bodyhead) + len(text) + len(bodyfooter) + len(keyhead) + len(kws) + len(keyfooter) + len(footer))
 
     print >> out, header
-    print >> out, bodyhead + '\n' + title + '\n'
+    try:
+        print >> out, bodyhead + '\n' + title + '\n'
+    except:
+        print >> out, bodyhead + '\n' + title.encode('utf8') + '\n'
+
     for line in clean_text:
         print >> out, line.encode('utf-8')
     print >> out, bodyfooter
@@ -588,56 +593,60 @@ class OutputSplitter:
 
 tagRE = re.compile(r'(.*?)<(/?\w+)[^>]*>(?:([^<]*)(<.*?>)?)?')
 
-def process_data(input, output, get_keywords):
+def process_data(input_dir, output, get_keywords):
     global prefix
 
     page = []
     id = None
-    inText = False
-    redirect = False
-    for line in input:
-        line = line.decode('utf-8')
-        tag = ''
-        if '<' in line:
-            m = tagRE.search(line)
-            if m:
-                tag = m.group(2)
-        if tag == 'page':
-            page = []
-            redirect = False
-        elif tag == 'id' and not id:
-            id = m.group(3)
-        elif tag == 'title':
-            title = m.group(3)
-        elif tag == 'redirect':
-            redirect = True
-        elif tag == 'text':
-            inText = True
-            line = line[m.start(3):m.end(3)] + '\n'
-            page.append(line)
-            if m.lastindex == 4: # open-close
-                inText = False
-        elif tag == '/text':
-            if m.group(1):
-                page.append(m.group(1) + '\n')
+
+    for input_file_ in os.listdir(input_dir):
+        input_file__ = os.path.join(input_dir, input_file_)
+        with open(input_file__) as input:
             inText = False
-        elif inText:
-            page.append(line)
-        elif tag == '/page':
-            colon = title.find(':')
-            if (colon < 0 or title[:colon] in acceptedNamespaces) and \
-                    not redirect:
-                print id, title.encode('utf-8')
-                sys.stdout.flush()
-                WikiDocument(output, id, title, ''.join(page), get_keywords)
-                # thread.start_new_thread(WikiDocument, (output, id, title, ''.join(page)))
-            id = None
-            page = []
-        elif tag == 'base':
-            # discover prefix from the xml dump file
-            # /mediawiki/siteinfo/base
-            base = m.group(3)
-            prefix = base[:base.rfind("/")]
+            redirect = False
+            for line in input:
+                line = line.decode('utf-8')
+                tag = ''
+                if '<' in line:
+                    m = tagRE.search(line)
+                    if m:
+                        tag = m.group(2)
+                if tag == 'page':
+                    page = []
+                    redirect = False
+                elif tag == 'id' and not id:
+                    id = m.group(3)
+                elif tag == 'title':
+                    title = m.group(3)
+                elif tag == 'redirect':
+                    redirect = True
+                elif tag == 'text':
+                    inText = True
+                    line = line[m.start(3):m.end(3)] + '\n'
+                    page.append(line)
+                    if m.lastindex == 4: # open-close
+                        inText = False
+                elif tag == '/text':
+                    if m.group(1):
+                        page.append(m.group(1) + '\n')
+                    inText = False
+                elif inText:
+                    page.append(line)
+                elif tag == '/page':
+                    colon = title.find(':')
+                    if (colon < 0 or title[:colon] in acceptedNamespaces) and \
+                            not redirect:
+                        print id, title.encode('utf-8')
+                        sys.stdout.flush()
+                        WikiDocument(output, id, title, ''.join(page), get_keywords)
+                        # thread.start_new_thread(WikiDocument, (output, id, title, ''.join(page)))
+                    id = None
+                    page = []
+                elif tag == 'base':
+                    # discover prefix from the xml dump file
+                    # /mediawiki/siteinfo/base
+                    base = m.group(3)
+                    prefix = base[:base.rfind("/")]
 
 ### CL INTERFACE ############################################################
 
@@ -651,7 +660,7 @@ def show_usage(script_name):
 # Minimum size of output files
 minFileSize = 200 * 1024
 
-def parse_wiki(input_file, output_dir, file_size, get_keywords):
+def parse_wiki(input_dir, output_dir, file_size, get_keywords):
     global keepLinks, keepSections, prefix, acceptedNamespaces
     # script_name = os.path.basename(sys.argv[0])
 
@@ -706,5 +715,6 @@ def parse_wiki(input_file, output_dir, file_size, get_keywords):
         ignoreTag('a')
 
     output_splitter = OutputSplitter(compress, file_size, output_dir)
-    process_data(input_file, output_splitter, get_keywords)
+
+    process_data(input_dir, output_splitter, get_keywords)
     output_splitter.close()
