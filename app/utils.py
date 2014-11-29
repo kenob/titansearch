@@ -2,6 +2,7 @@ from app import application, logger
 from urllib import *
 import re
 from .wiki_extractor import clean
+# from np_extractor import NPExtractor
 
 base_url = application.config.get('SOLR_URI')
 
@@ -35,6 +36,19 @@ def get_item(collection, _id, **kwargs):
 	except:
 		return False
 
+def get_top_terms(collection="newsArticleCollection", field="keywords", limit=100):
+	params = "terms.fl=%s&terms.lower=a&omitHeader=true&terms.limit=%s&wt=python" % (field, limit)
+	base_url = application.config.get('SOLR_URI') + collection
+	url = base_url + "/terms?" + params
+	res = dict()
+	try:
+		conn = urlopen(url)
+		res = eval(conn.read())
+	except:
+		return dict(status="Unsuccessful", words=[])
+	words = [r for r in res['terms'].get('keywords',[]) if not type(r)==int]
+	return dict(status="Successful", words=words)
+
 def parse_to_alphanumeric(input_string):   
    pattern = re.compile('[\W_]+')
    ret = pattern.sub(" ", input_string)
@@ -45,3 +59,8 @@ def clean_wiki(w_list):
 	res = clean(w_list[0])
 	return [res]
 
+def get_keywords(text):
+	# np_extractor = NPExtractor(text)
+	# result = np_extractor.extract()
+	# return result
+	return []

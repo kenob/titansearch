@@ -1,6 +1,6 @@
 from flask.ext import restful
 from flask import request, make_response
-from utils import search, get_item, parse_to_alphanumeric
+from utils import search, get_item, get_top_terms, get_keywords, parse_to_alphanumeric
 from .keyword_extractor import extract_keywords
 from app import application, news, wiki, logger
 from flask.ext.restful import reqparse
@@ -57,7 +57,6 @@ class Search(restful.Resource):
 			result_snippets = search_results_[1]
 			has_next = search_results_[2] > 1
 			has_previous = (page - 1) > 0
-			logger.info(has_previous)
 			for res in search_results:
 				_id = res['id']
 				if _id in result_snippets:
@@ -85,7 +84,6 @@ class SearchResult(restful.Resource):
 		wiki_article = dict()
 		news_articles = []
 
-		logger.info("here!")
 		wiki_article_solr = get_item(wiki, result_id)
 		if wiki_article_solr:
 			wiki_article = wiki_article_solr
@@ -96,20 +94,24 @@ class SearchResult(restful.Resource):
 
 		keywords = wiki_article.get('keywords',[])
 
+		#TODO: For large documents, get keywords for random parts of the document only, to keep the kw list short enough
+		try:
+			keywords = get_keywords(wiki_article['wiki_body'][0].decode())
+		except:
+			keywords = get_keywords(parse_to_alphanumeric(wiki_article['wiki_body'][0]))
 
-		if not application.config.get('INDEX_KEYWORD_GENERATION'):
-			keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
+		# if not application.config.get('INDEX_KEYWORD_GENERATION'):
+		# 	keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
+		# 	logger.info(keywords)
 
 		#since we are favoring precision over recall
-		if len(keywords) > 1:
-			for t in keywords:
-				query_terms += t.split()
-			query_term = "+".join(query_terms)
+		query_terms = ["\""+t+"\"" for t in keywords]
+		query_term = "+OR+".join(query_terms)
+		if query_term:
 			twitter_query = " OR ".join(query_terms)
-
 			news_articles = search(news, query_term)
 		related_tweets = search_twitter(twitter_query) ;
-
+		logger.info(news_articles)
 		return dict(related_news=news_articles, wiki_article=wiki_article, related_tweets=related_tweets), 200
 	def post(self, **kwargs):
 		return

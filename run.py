@@ -5,7 +5,11 @@ from urllib import *
 import json, time, requests
 from app.resources import api
 from WikiExtractor import parse_wiki
-
+from app.utils import get_top_terms, get_keywords
+import time
+from bs4 import BeautifulSoup
+import html5lib
+from lxml import html
 
 manager = Manager(application)
 
@@ -47,15 +51,45 @@ def refresh_index(instance):
 				break
 
 @manager.command
-def parse_wikimedia(input_file = "C:\Users\Keno\Documents\IR_3\wiki_data\Wikipedia-20141121065051.xml", 
-					output_dir= "C:\Users\Keno\Documents\IR_3\wiki_data2"):
+def parse_wikimedia(input_dir = "/home/kenob/projects/wikindexer/flask-app/wiki_on_the_internet/wiki_from_solr", 
+					output_dir= "/home/kenob/wikimedia"):
 	"""Parses and generates keywords from Wikimedia articles""" 
 	get_keywords = False
 	if application.config.get('INDEX_KEYWORD_GENERATION'):
 		get_keywords = True
-	with open(input_file) as input_file:
-		parse_wiki(input_file, output_dir, 1024*1024, get_keywords)
+	parse_wiki(input_dir, output_dir, 1024*1024, get_keywords)
 
+@manager.command
+def get_wiki_articles(output_dir):
+	if not os.path.exists(output_dir):
+		os.mkdir(output_dir)
+	q = get_top_terms("newsArticleCollection", "keywords", 100)
+	if q['status'] == 'Unsuccessful':
+		print "Solr request Unsuccessful"
+		return
+	words = q.get('words')
+	s = requests.Session()
+	url = "http://en.wikipedia.org/w/index.php?title=Special:Export"
+	pages = []
+	for word in words:
+		r = s.post(url, data=dict(action="submit",catname=word, addcat=True))
+		doc = html5lib.parse(r.text)
+		tree = html.fromstring(r.text)
+		line = [td.text for td in tree.xpath("//*[@id='mw-content-text']/form/textarea")]
+		pages_obtained = []
+		for l in line:
+			if l:
+				pages_obtained = l.splitlines()
+				pages += pages_obtained
+		print "%s pages obtained for %s" % (len(pages_obtained), word)
+	page_params = ("%0A").join(pages)
+	time = "2000-01-27T20:25:56Z"
+	url = "http://en.wikipedia.org/w/index.php?title=Special:Export&pages=%s&offset=%s&limit=10000&action=submit"
+	url = "http://en.wikipedia.org/wiki/Special:Export/"
+	for i, page in enumerate(pages):
+		r = s.get(url+page)
+		with open(os.path.join(output_dir, "wiki_%s" % i), 'wr') as out:
+			out.write(r.text.encode('utf8'))
 
 @manager.command
 def test_kwextractor():
@@ -66,7 +100,16 @@ def test_kwextractor():
 	else:
 		print "There was a connection problem"
 
-
+@manager.command
+def test_topic_extractor():
+	sentence = """T Frustrated at the lack of a good screening test for ovarian cancer, advocacy groups have persuaded professional cancer 
+		 organizations to endorse a list of persistent symptoms that might indicate the presence of the disease. The list could have a very beneficial 
+		 effect in alerting patients -- and doctors who have been dismissive of complaints of generalized discomfort -- that ovarian cancer is present
+		 at an early stage when it is most treatable.","Among the flood of patients who have the all-too-common symptoms, there will be some who 
+		 undergo needless surgeries to remove ovaries that turn out not to be cancerous. That is the price that may be paid for this modest step 
+		 toward detecting a cancer that typically kills 
+	     most women who have it."""
+	print get_keywords(sentence)
 
 if __name__=="__main__":
 	manager.run()
