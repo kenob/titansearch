@@ -112,6 +112,7 @@ class SearchResult(restful.Resource):
 			news_articles = search(news, query_term)
 		related_tweets = search_twitter(twitter_query) ;
 		logger.info(news_articles)
+		logger.info(related_tweets)
 		return dict(related_news=news_articles, wiki_article=wiki_article, related_tweets=related_tweets), 200
 	def post(self, **kwargs):
 		return

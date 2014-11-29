@@ -21,6 +21,11 @@ def runserver():
 
 @manager.command
 def refresh_index(instance):
+	"""
+	Performs a full dataimport on either wikiArticleCollection or the newsArticleCollection
+	params:
+	instance: 'wiki' or 'news'
+	"""
 	base_url = application.config.get('SOLR_URI') + news
 
 	if instance=='wiki':
@@ -51,9 +56,14 @@ def refresh_index(instance):
 				break
 
 @manager.command
-def parse_wikimedia(input_dir = "/home/kenob/projects/wikindexer/flask-app/wiki_on_the_internet/wiki_from_solr", 
+def parse_wikimedia(input_dir = "/home/kenob/wik", 
 					output_dir= "/home/kenob/wikimedia"):
-	"""Parses and generates keywords from Wikimedia articles""" 
+	"""
+	Parses and generates keywords from Wikimedia articles
+	params:
+	input_dir: An absolute, flat directory containing ONLY wikimedia articles
+	output_dir: The directory from which wikimedia articles are read by the wikiArticleCollection core
+	""" 
 	get_keywords = False
 	if application.config.get('INDEX_KEYWORD_GENERATION'):
 		get_keywords = True
@@ -61,6 +71,11 @@ def parse_wikimedia(input_dir = "/home/kenob/projects/wikindexer/flask-app/wiki_
 
 @manager.command
 def get_wiki_articles(output_dir):
+	"""
+	Collects keywords and topics from our news corpus and gets corresponding wikipedia pages
+	params:
+	output_dir: an empty/non-existent  sub-directory where the articles should be stored
+	"""
 	if not os.path.exists(output_dir):
 		os.mkdir(output_dir)
 	q = get_top_terms("newsArticleCollection", "keywords", 100)

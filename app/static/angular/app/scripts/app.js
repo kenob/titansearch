@@ -54,6 +54,7 @@ angular.module('angularApp', [
 }])
 .run(['$rootScope','$sce', '$state', function($rootScope, $sce, $state){
     $rootScope.$state = $state;
+    $rootScope.alerts = [];
 }]);
 
 

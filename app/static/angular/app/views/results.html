@@ -1,10 +1,37 @@
 
-<p>Search Results for "<span style="color:red">{{query_term}}</span>"</p>
+<header class="navbar navbar-inverse navbar-fixed-top wet-asphalt" role="banner">
+	<div class="container">
+	    <div class="navbar-header">
+	        <button id="search-button-small" type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" ar xpanded="false" aria-controls="navbar">
+	       <span class="sr-only">Toggle navigation</span>
+	       <span class="glyphicon glyphicon-search" style="color:#fff"></span>
+	       </button>
+	        <a class="navbar-brand" href="/index"><img src="../static/images/logo.png" alt="logo"></a>
+	    </div>
+	    <div class="collapse navbar-collapse">
+	    <div id="search-box" class="col-lg-3">
+	    <div class="input-group custom-search-form">
+	      <input type="text" id="search-text" class="form-control">
+	      <span class="input-group-btn">
+	      <button id="search-button" class="btn btn-default" type="button"><!--change this for bg color-->
+	      <span class="glyphicon glyphicon-search"></span>
+	     </button>
+	     </span>
+	     </div><!-- /input-group -->
+	     </div>
+	    </div>
+	</div>
+</header><!--/header-->
+<div class="container main">
 
+<p>Search Results for "<span style="color:red">{{query_term}}</span>"</p>
 <div ng-repeat="result in search_results">
-<h2  data-toggle="modal" data-target="#myModal"><a ui-sref=".related({doc_id : result.id})">{{result.title[0]}}</a></h2>
-<p><div ng-bind-html="result.wiki_body"></div></p>
-<p><a href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></p>
+        <div>
+			<h2 data-toggle="modal" data-target="#myModal"><a ui-sref=".related({doc_id : result.id})">{{result.title[0]}}</a></h2>
+			<p><div ng-bind-html="result.wiki_body"></div></p>
+			<p><a href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></p>
+            <hr>
+        </div>
 </div>
 <p>
 Current Page: {{ current_page }}<br          />
@@ -17,4 +44,5 @@ Current Page: {{ current_page }}<br          />
 	<div ui-view>
 		Loading...
 	</div>
+</div>
 </div>
