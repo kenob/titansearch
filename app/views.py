@@ -21,6 +21,7 @@ def results():
 	qt = request.args.get('q')
 	query_terms = qt.split()
 	query_term = "+".join(query_terms)
+	form = SearchForm();
 
 	sear = search(wiki, query_term, hl="true")
 	error_message = "No results found for your search!"
@@ -52,6 +53,8 @@ def related(result_id):
 	related_tweets = []
 	wiki_article = dict()
 	news_articles = []
+	form = SearchForm();
+
 
 	wiki_article_solr = get_item(wiki, result_id)
 	if wiki_article_solr:
