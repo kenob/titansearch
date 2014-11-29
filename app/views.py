@@ -31,12 +31,12 @@ def results():
 
 	# for Did you mean? section
 	# http://localhost:8983/solr/wikiArticleCollection/spell?q=alternatie&wt=json&indent=true
-	params = urllib.urlencode({'q': initial_query, 'wt': json, 'indent' : true })
+	params = urllib.urlencode({'q': initial_query, 'wt': "json", 'indent' : "true" })
 	try:
 		did_you_mean_json = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
 	except:
 		response = None;
-	
+
 
 
 	#currently returning only results that were highlighted
@@ -90,7 +90,7 @@ def related(result_id):
 
 		news_articles = search(news, query_term)
 	statuses = search_twitter(twitter_query) ;
-	
+	print twitter_query;
 	if news_articles:
 		news_articles = news_articles[0]
 		#TODO: remove the list comprehension, it was just for design purposes
