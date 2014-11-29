@@ -5,13 +5,16 @@ from utils import search, get_item, parse_to_alphanumeric, clean_wiki
 from .keyword_extractor import extract_keywords
 from .wiki_extractor import clean
 from .search_twitter import search_twitter
+import urllib
+import json
 
-
+initial_query = "";
 #TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
 @application.route('/', methods=['GET', 'POST'])
 @application.route('/index', methods=['GET', 'POST'])
 def index():
 	form = SearchForm();
+	initial_query = form.query.data;
 	if form.validate_on_submit():
 		return redirect(url_for('results', q=form.query.data))
 	return render_template('index.html', form = form);
@@ -25,6 +28,15 @@ def results():
 
 	sear = search(wiki, query_term, hl="true")
 	error_message = "No results found for your search!"
+
+	# for Did you mean? section
+	# http://localhost:8983/solr/wikiArticleCollection/spell?q=alternatie&wt=json&indent=true
+	params = urllib.urlencode({'q': initial_query, 'wt': json, 'indent' : true })
+	try:
+		did_you_mean_json = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
+	except:
+		response = None;
+	
 
 
 	#currently returning only results that were highlighted
