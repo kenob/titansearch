@@ -37,9 +37,12 @@ def results():
 	did_you_mean = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
 	did_you_mean_object = json.load(did_you_mean)
 	did_you_mean_words = [];
-	for word in did_you_mean_object["spellcheck"]["suggestions"][1]["suggestion"]:
-		did_you_mean_words.append(word["word"]);
-
+	try: 
+		did_you_mean_words = [];
+		for word in did_you_mean_object["spellcheck"]["suggestions"][1]["suggestion"]:
+			did_you_mean_words.append(word["word"]);
+	except: 
+		did_you_mean_words = [];
 	#currently returning only results that were highlighted
 	if sear:
 		search_results = sear[0]
