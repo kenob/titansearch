@@ -33,7 +33,7 @@ angular.module('angularApp', [
   'ui.router',
   'ui.router.stateHelper',
   'ui.bootstrap.pagination',
-  'autocomplete',\
+  'autocomplete'
 ])
 .config(function ($stateProvider, $urlRouterProvider,  $resourceProvider) {
   //delete $httpProvider.defaults.headers.common['X-Requested-With'];
