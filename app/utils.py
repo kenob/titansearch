@@ -46,9 +46,10 @@ def get_top_terms(collection="newsArticleCollection", field="keywords", limit=10
 	try:
 		conn = urlopen(url)
 		res = eval(conn.read())
+		logger.info(res)
 	except:
 		return dict(status="Unsuccessful", words=[])
-	words = [r for r in res['terms'].get('keywords',[]) if not type(r)==int]
+	words = [r for r in res['terms'].get(field,[]) if not type(r)==int]
 	logger.info(words)
 	return dict(status="Successful", words=words)
 

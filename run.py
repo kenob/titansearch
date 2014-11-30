@@ -104,7 +104,7 @@ def get_wiki_articles(output_dir):
 	url = "http://en.wikipedia.org/wiki/Special:Export/"
 	for i, page in enumerate(pages):
 		r = s.get(url+page)
-		with open(os.path.join(output_dir, "wiki_%s.xml" % i), 'wr') as out:
+		with open(os.path.join(output_dir, "wiki_%s.xml" % i), 'w') as out:
 			out.write(r.text.encode('utf8'))
 
 @manager.command
