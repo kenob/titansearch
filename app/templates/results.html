@@ -40,7 +40,11 @@
             </div>
             <br>
             <div>
-                <h4>Did you mean: <a href="/results?q={{did_you_mean_words[0]}}">{{did_you_mean_words[0]}}</a></h4>
+                <h4>Did you mean: 
+                {% for n in range(0,3) %}
+                <a href="/results?q={{did_you_mean_words[n]}}">{% if n >= 1 %}{{ ', ' }}{% endif %}{{did_you_mean_words[n]}}</a>
+                {% endfor %}
+                </h4>
             </div>
             {% endif %}
             
