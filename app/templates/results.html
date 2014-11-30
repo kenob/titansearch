@@ -23,6 +23,7 @@
             {% endfor %} 
             {{error_message}}
 
+            <section>
             <div class="container">
                 <ul class="pagination pagination-lg">
                     <li><a href="#"><i class="icon-angle-left"></i></a></li>
@@ -33,7 +34,8 @@
                     <li><a href="#">5</a></li>
                     <li><a href="#"><i class="icon-angle-right"></i></a></li>
                 </ul><!--/.pagination-->
-            </div>            
+            </div>
+            </section>     
             {% else %}
             <div>
                 <h2>Sorry. No results found for your search.</h2>
@@ -42,7 +44,7 @@
             <div>
                 <h4>Did you mean: 
                 {% for n in range(0,3) %}
-                <a href="/results?q={{did_you_mean_words[n]}}">{% if n >= 1 %}{{ ', ' }}{% endif %}{{did_you_mean_words[n]}}</a>
+                <a class="suggestions" href=#>{% if n >= 1 %}{{ ', ' }}{% endif %}{{did_you_mean_words[n]}}</a>
                 {% endfor %}
                 </h4>
             </div>

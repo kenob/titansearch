@@ -1,6 +1,7 @@
 from flask import Flask;
 from logging import StreamHandler, Formatter
 import logging
+import HTMLParser
 
 application = Flask(__name__);
 application.config.from_object('config')
@@ -16,3 +17,5 @@ file_handler.setFormatter(Formatter(
 application.logger.setLevel(logging.INFO) 
 application.logger.addHandler(file_handler)
 logger = application.logger
+
+html_parser = HTMLParser.HTMLParser()

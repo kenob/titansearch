@@ -12,7 +12,7 @@
 	    <div id="search-box" class="col-lg-3">
             <form role="form" id="searchbar" ng-submit="search()">
 	            <div class="input-group custom-search-form">
-	              <input type="text" ng-model="searchForm.q" class="form-control" required/>
+	              <input type="text" ng-model="searchForm.q" class="form-control" size="100" required/>
 	              <span class="input-group-btn">
 	              <button id="search-button" class="btn btn-default" type="submit"><!--change this for bg color-->
 	              <span class="glyphicon glyphicon-search"></span>
@@ -26,22 +26,25 @@
 </header><!--/header-->
 <div class="container main">
 
-<p>Search Results for "<span style="color:red">{{query_term}}</span>"</p>
+<h3>Search Results for "<span style="color:#1bbc9b">{{query_term}}</span>"</h3>
 <div ng-repeat="result in search_results">
         <div>
 			<h2 data-toggle="modal" data-target="#myModal"><a ui-sref=".related({doc_id : result.id})">{{result.title[0]}}</a></h2>
 			<p><div ng-bind-html="result.wiki_body"></div></p>
-			<p><a href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></p>
+			<h5><a href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></h5>
             <hr>
         </div>
 </div>
-<p ng-bind="error_message"></p>
+<h3 ng-bind="error_message"></h3>
 <div class="container" ng-hide="num_results < 1">
+<div class="row">
 <pagination total-items="num_results" ng-model="current_page" ng-change="change()" class="pagination-lg"></pagination>
 </div>
-
+</div>
+</div>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="dialog">
 	<div ui-view>
 		Loading...
 	</div>

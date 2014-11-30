@@ -1,26 +1,25 @@
-<div class="modal-dialog modal-lg">
     <div class="modal-content">
-		<div class="container main">
+		<div class="container" id ="results">
 		    <div class="row">
 		        <div class="col-md-8">
 		            <div>
-		                <h2>{{currentArticle.wiki_article.title[0]}}</h2>
-		                <p>{{currentArticle.wiki_article.wiki_body[0]}}</p>
-		                <p><a href="{{wiki_article.url}}">{{currentArticle.wiki_article.url}}</a></p>
+		                <h2 ng-bind="currentArticle.wiki_article.title[0]"></h2>
+		                <p ng-bind-html="currentArticle.wiki_article.wiki_body[0] | addEllipsis:1000">loading...</p>
+		                <p><a href="{{currentArticle.wiki_article.links[0]}}" target='_blank' ng-bind="link_message"></a></p>
 		            </div>
 		        </div>
-		        <div class="col-md-4" ng-hide="currentArticle.related_news.length < 1">
+		        <div class="col-md-4" ng-show="currentArticle.related_news.length > 1">
 		            <h3>News</h3>
 		            <ul class="list-group" ng-repeat="result in currentArticle.related_news">
 		                <li class="list-group-item">
-		                    <h4><a href="{{result['links'][0]}}" target= "_blank">{{result['title'][0]}}</a></h4>
-		                    <p>{{result['news_body'][0]}}<p>
+		                    <h4><a href="{{result['links'][0]}}" target= "_blank" ng-bind="result.title[0]"></a></h4>
+		                    <div ng-bind="result.news_body[0] | addEllipsis:200"></div>
 		                </li>
 		            </ul>
 		        </div>
-		        <div class="col-md-4" ng-hide="currentArticle.related_tweets.length < 1">
+		        <div class="col-md-4" ng-show="currentArticle.related_tweets.length > 1">
 		            <h3>Social Media</h3>
-		            <ul class="list-group" ng-repeat="tweet in currentArticle.related_tweets">
+		            <ul class="list-group" ng-repeat="tweet in currentArticle.related_tweets track by tweet">
 		                <li class="list-group-item">
 		                    <p>{{tweet}}</p>
 		                </li>
@@ -28,5 +27,4 @@
 		        </div>
 		    </div>
 		</div>
-  </div>
   </div>

@@ -6,6 +6,7 @@ from app import application, news, wiki, logger
 from flask.ext.restful import reqparse
 from json import dumps
 from .search_twitter import search_twitter
+from app import html_parser
 
 
 api = restful.Api()
@@ -106,17 +107,18 @@ class SearchResult(restful.Resource):
 		# if not application.config.get('INDEX_KEYWORD_GENERATION'):
 		# 	keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
 		# 	logger.info(keywords)
+		twitter_query = wiki_article["title"][0];
 
 		#since we are favoring precision over recall
 		query_terms = ["\""+t+"\"" for t in keywords]
-		query_term = "+OR+".join(query_terms)
+		query_terms = wiki_article['title'][0].split()
+		query_term = "+".join(query_terms)
+
 		if query_term:
-			twitter_query = " OR ".join(query_terms)
-			news_articles = search(news, query_term)
+			news_articles = search(news, query_term, defType="edismax", mm=2, qf="title^20.0+keywords^20.0+body^2.0")[0]
 		related_tweets = search_twitter(twitter_query) ;
-		logger.info(news_articles)
-		logger.info(related_tweets)
-		return dict(related_news=news_articles, wiki_article=wiki_article, related_tweets=related_tweets), 200
+		related_tweets = [html_parser.unescape(tweet) for tweet in related_tweets]
+		return dict(related_news=news_articles[:3], wiki_article=wiki_article, related_tweets=related_tweets), 200
 	def post(self, **kwargs):
 		return
 

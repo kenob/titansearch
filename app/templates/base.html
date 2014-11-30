@@ -48,6 +48,14 @@
       <script type="text/javascript">         
          $(document).ready(function () {
 
+          $(".suggestions").click(function(){
+            var query = $(this).text();
+            query = query.replace(',','');
+            query = $.trim(query);
+            $('#search-text').val(query);
+            $('#searchbar').submit();
+          })
+
           var currencies = [
     { value: 'Afghan afghani', data: 'AFN' },
     { value: 'Albanian lek', data: 'ALL' },
@@ -55,7 +63,6 @@
     { value: 'European euro', data: 'EUR' },
     { value: 'Angolan kwanza', data: 'AOA' },
     { value: 'East Caribbean dollar', data: 'XCD' },
-...
     { value: 'Vietnamese dong', data: 'VND' },
     { value: 'Yemeni rial', data: 'YER' },
     { value: 'Zambian kwacha', data: 'ZMK' },

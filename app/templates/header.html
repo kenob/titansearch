@@ -14,8 +14,7 @@
             <form role="form" id="searchbar" method="post" action="/">
             <div class="input-group custom-search-form">
               {{form.csrf_token}}
-              {{form.query(id="search-text",class="form-control",value=initial_search_term)}}
-              <h1>{{intial_search_term}}</h1>
+              {{form.query(id="search-text",class="form-control", value=initial_search_term)}}
               {% for error in form.query.errors %} 
               <span style="color: red;">[{{ error }}]</span>
               {% endfor%}

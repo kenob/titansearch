@@ -31,7 +31,7 @@ def results():
 	sear = search(wiki, query_term, hl="true")
 	error_message = "No results found for your search!"
 	global initial_query 
-
+	initial_search_term = initial_query ;
 	# for Did you mean? section
 	# http://localhost:8983/solr/wikiArticleCollection/spell?q=alternatie&wt=json&indent=true
 	params = urllib.urlencode({'q': initial_query, 'wt': "json", 'indent' : "true" })
@@ -73,6 +73,7 @@ def related(result_id):
 	news_articles = []
 	form = SearchForm();
 	global initial_query 
+	initial_search_term = initial_query ;
 
 
 
@@ -98,7 +99,7 @@ def related(result_id):
 	query_term = "title:"+wiki_article["title"][0]+"^3 news_body:"+query_term;
 	news_articles = search(news, query_term)
 	
-	
+
 	# twitter_query = " OR ".join(query_terms)
 
 	twitter_query = wiki_article["title"][0];
