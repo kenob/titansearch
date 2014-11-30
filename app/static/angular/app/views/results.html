@@ -10,14 +10,16 @@
 	    </div>
 	    <div class="collapse navbar-collapse">
 	    <div id="search-box" class="col-lg-3">
-	    <div class="input-group custom-search-form">
-	      <input type="text" id="search-text" class="form-control">
-	      <span class="input-group-btn">
-	      <button id="search-button" class="btn btn-default" type="button"><!--change this for bg color-->
-	      <span class="glyphicon glyphicon-search"></span>
-	     </button>
-	     </span>
-	     </div><!-- /input-group -->
+            <form role="form" id="searchbar" ng-submit="search()">
+	            <div class="input-group custom-search-form">
+	              <input type="text" ng-model="searchForm.q" class="form-control" required/>
+	              <span class="input-group-btn">
+	              <button id="search-button" class="btn btn-default" type="submit"><!--change this for bg color-->
+	              <span class="glyphicon glyphicon-search"></span>
+	             </button>
+	             </span>
+	             </div><!-- /input-group -->
+             </form>
 	     </div>
 	    </div>
 	</div>
@@ -33,12 +35,10 @@
             <hr>
         </div>
 </div>
-<p>
-Current Page: {{ current_page }}<br          />
-<button ng-show="has_previous" ng-click="change('previous')">Previous</button>
-<button ng-show="has_next" ng-click="change('next')">Next</button>
-</p>
 <p ng-bind="error_message"></p>
+<div class="container">
+<pagination total-items="num_results" ng-model="current_page" ng-change="change()"></pagination>
+</div>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div ui-view>

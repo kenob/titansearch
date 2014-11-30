@@ -96,9 +96,10 @@ def get_wiki_articles(output_dir):
 			if l:
 				pages_obtained = l.splitlines()
 				pages += pages_obtained
-		print "%s pages obtained for %s" % (len(pages_obtained), word)
+		logger.info("%s page titles obtained for %s" % (len(pages_obtained), word))
 	page_params = ("%0A").join(pages)
-	time = "2000-01-27T20:25:56Z"
+	logger.info("A total of %s page titles obtained, now getting pages from Wikipedia...")
+	from_ = "2000-01-27T20:25:56Z"
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export&pages=%s&offset=%s&limit=10000&action=submit"
 	url = "http://en.wikipedia.org/wiki/Special:Export/"
 	for i, page in enumerate(pages):
