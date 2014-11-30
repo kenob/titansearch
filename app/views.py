@@ -62,7 +62,7 @@ def results():
 			if len(search_results)>0:
 				error_message = ""
 
-	return render_template('results.html', **locals());
+	return render_template('results.html', **locals(), **globals());
 
 @application.route('/related/<result_id>')
 def related(result_id):
@@ -107,7 +107,7 @@ def related(result_id):
 		#TODO: remove the list comprehension, it was just for design purposes
 		related_news = [news_article for news_article in news_articles if news_article.get('news_body')]
 
-	return render_template('related.html',**locals());
+	return render_template('related.html',**locals(),**globals());
 
 @application.route('/async')
 def index_async():
