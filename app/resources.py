@@ -139,5 +139,38 @@ class SearchResult(restful.Resource):
 	def post(self, **kwargs):
 		return
 
-api.add_resource(Search, '/api/async/v1/')
+class AutoSuggest(restful.Resource):
+	def get(self, **kwargs):
+		parser.add_argument('q', type=str)
+		args = parser.parse_args()
+		qt = args.get('q')
+		logger.info(qt)
+		if not qt:
+			return dict(results=[]),200
+		params = urllib.urlencode({"q":request.args.get('term'), 'wt': "json", 'indent' : "true" });
+		suggestions = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/suggest?%s" % params)
+		suggestions_object = json.load(suggestions);
+		suggestions_array = suggestions_object["spellcheck"]["suggestions"];
+		flag = 0;
+
+		for i in  xrange(len(suggestions_array)):
+			if suggestions_array[i]==u'collation':
+				flag = i;
+				break;
+		actual_suggestion = [];
+		for i in xrange(flag, len(suggestions_array) ):
+			if not suggestions_array[i]==u'collation':
+				actual_suggestion.append(suggestions_array[i]);
+		
+		real_suggestion = str(actual_suggestion);
+		real_suggestion = real_suggestion.replace('\'','\"');
+		real_suggestion = real_suggestion.replace('u\"','\"');
+		logger.info(real_suggestion)
+		return (real_suggestion.split(","));
+
+
+
+
+api.add_resource(AutoSuggest, '/api/async/v1/suggest')
 api.add_resource(SearchResult, '/api/async/v1/results/<wiki_id>')
+api.add_resource(Search, '/api/async/v1/')

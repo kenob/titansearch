@@ -50,7 +50,7 @@ angular.module('angularApp', [
   return $resource("/api/async/v1/results/:id");
 })
 .factory('AutoComplete', function($resource){
-  return $resource("/suggest");
+  return $resource("/api/async/v1/suggest");
 })
 .filter('addEllipsis', function () {
     return function (input, max) {
@@ -91,7 +91,7 @@ angular.module('angularApp', [
     $rootScope.completeTerm = function(typed){
 
       var res = AutoComplete
-            .get(typed, 
+            .get({q:typed}, 
               function(data){
                 $rootScope.autoCompleteTerms = data;
                 console.log(data);         

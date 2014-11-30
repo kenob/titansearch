@@ -76,7 +76,7 @@ def get_wiki_articles(output_dir):
 	"""
 	if not os.path.exists(output_dir):
 		os.mkdir(output_dir)
-	q = get_top_terms("newsArticleCollection", "title", 100)
+	q = get_top_terms("newsArticleCollection", "keywords", 100)
 	if q['status'] == 'Unsuccessful':
 		print "Solr request Unsuccessful"
 		return
