@@ -1091,4 +1091,5 @@ ul.faq li > div h3 {
   width: 98%;
   height: 98%;
   position: relative;
+  overflow: auto;
 }

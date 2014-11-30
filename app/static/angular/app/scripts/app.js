@@ -48,14 +48,18 @@ angular.module('angularApp', [
 .factory('SearchResult', function($resource){
   return $resource("/api/async/v1/results/:id");
 })
-.filter('range', function() {
-  return function(input, min, max) {
-    min = parseInt(min); //Make string input int
-    max = parseInt(max);
-    for (var i=min; i<max; i++)
-      input.push(i);
-    return input;
-  };
+.filter('addEllipsis', function () {
+    return function (input, max) {
+        if (input) {
+            // Replace this with the real implementation
+            if(input.length > max){
+              return input.substring(0, max) + '...';  
+            }
+            else{
+              return input;
+            }
+        }
+    }
 })
 .run(['$rootScope','$sce', '$state', 'Search', function($rootScope, $sce, $state, Search){
     $rootScope.$state = $state;

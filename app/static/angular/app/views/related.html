@@ -1,12 +1,11 @@
-<div class="modal-dialog modal-lg">
     <div class="modal-content">
 		<div class="container" id ="results">
 		    <div class="row">
 		        <div class="col-md-8">
 		            <div>
 		                <h2 ng-bind="currentArticle.wiki_article.title[0]"></h2>
-		                <p ng-bind-html="currentArticle.wiki_article.wiki_body[0]">loading...</p>
-		                <p><a href="{{currentArticle.wiki_article.url}}" ng-bind="currentArticle.wiki_article.url"></a></p>
+		                <p ng-bind-html="currentArticle.wiki_article.wiki_body[0] | addEllipsis:1000">loading...</p>
+		                <p><a href="{{currentArticle.wiki_article.links[0]}}" target='_blank' ng-bind="link_message"></a></p>
 		            </div>
 		        </div>
 		        <div class="col-md-4" ng-show="currentArticle.related_news.length > 1">
@@ -14,7 +13,7 @@
 		            <ul class="list-group" ng-repeat="result in currentArticle.related_news">
 		                <li class="list-group-item">
 		                    <h4><a href="{{result['links'][0]}}" target= "_blank" ng-bind="result.title[0]"></a></h4>
-		                    <div ng-bind="result.news_body[0]"></div>
+		                    <div ng-bind="result.news_body[0] | addEllipsis:200"></div>
 		                </li>
 		            </ul>
 		        </div>
@@ -28,5 +27,4 @@
 		        </div>
 		    </div>
 		</div>
-  </div>
   </div>

@@ -39,9 +39,10 @@
 <div class="container" ng-hide="num_results < 1">
 <pagination total-items="num_results" ng-model="current_page" ng-change="change()" class="pagination-lg"></pagination>
 </div>
-
+</div>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-lg" role="dialog">
 	<div ui-view>
 		Loading...
 	</div>
