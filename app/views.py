@@ -26,7 +26,8 @@ def results():
 	query_terms = qt.split()
 	query_term = "+".join(query_terms)
 	form = SearchForm();
-
+	query_term = "title:"+query_term+"^3 wiki_body:"+query_term;
+	print query_term
 	sear = search(wiki, query_term, hl="true")
 	error_message = "No results found for your search!"
 
@@ -81,7 +82,7 @@ def related(result_id):
 	twitter_query = "";
 
 	keywords = wiki_article.get('keywords',[])
-
+	print wiki_article;
 	if not application.config.get('INDEX_KEYWORD_GENERATION'):
 		keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
 	print "keywords : " + str(keywords);
