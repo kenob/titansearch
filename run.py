@@ -7,7 +7,6 @@ from app.resources import api
 from WikiExtractor import parse_wiki
 from app.utils import get_top_terms, get_keywords
 import time
-from bs4 import BeautifulSoup
 import html5lib
 from lxml import html
 
@@ -51,8 +50,8 @@ def refresh_index(instance):
 				break
 
 @manager.command
-def parse_wikimedia(input_dir = "/home/kenob/projects/wikindexer/flask-app/wiki_on_the_internet/wiki_from_solr", 
-					output_dir= "/home/kenob/wikimedia"):
+def parse_wikimedia(input_dir = "/Users/dhinesh/Dropbox/UB/dev/misc/yo", 
+					output_dir= "/Users/dhinesh/Dropbox/UB/dev/misc/Wiki"):
 	"""Parses and generates keywords from Wikimedia articles""" 
 	get_keywords = False
 	if application.config.get('INDEX_KEYWORD_GENERATION'):
@@ -88,7 +87,7 @@ def get_wiki_articles(output_dir):
 	url = "http://en.wikipedia.org/wiki/Special:Export/"
 	for i, page in enumerate(pages):
 		r = s.get(url+page)
-		with open(os.path.join(output_dir, "wiki_%s" % i), 'wr') as out:
+		with open(os.path.join(output_dir, "wiki_%s.xml" % i), 'wr') as out:
 			out.write(r.text.encode('utf8'))
 
 @manager.command
