@@ -39,17 +39,16 @@ def twitterRequest(url, method, parameters):
 def search_twitter(search_term):
     url = "https://api.twitter.com/1.1/search/tweets.json?q="+search_term
 
-
+    print "search term : " + search_term
     parameters = []
     response = twitterRequest(url, "GET", parameters)
-
     jsonresponse = json.load(response)
 
-
+    print "keys" + str(jsonresponse.keys())
     results = []
     if (u'statuses' in jsonresponse):
         statuses = jsonresponse[u'statuses']
-        tweet_count = 0
+        tweet_count = len(statuses);
         if(len(statuses) > 3):
             tweet_count = 3;
         else:
@@ -57,8 +56,8 @@ def search_twitter(search_term):
         for i in xrange(tweet_count):
             results.append(statuses[i][u'text'])  
 
-        # for result in results:
-        #     print result
+        for result in results:
+            print result
         return results
     return results;
 
