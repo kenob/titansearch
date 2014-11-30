@@ -19,6 +19,29 @@ def index():
 	if form.validate_on_submit():
 		return redirect(url_for('results', q=form.query.data))
 	return render_template('index.html', form = form);
+@application.route('/suggest')
+def suggest():
+	# http://localhost:8983/solr/wikiArticleCollection/suggest?q=alternative+ban&wt=json&indent=true
+	params = urllib.urlencode({"q":request.args.get('term'), 'wt': "json", 'indent' : "true" });
+	suggestions = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/suggest?%s" % params)
+	suggestions_object = json.load(suggestions);
+	suggestions_array = suggestions_object["spellcheck"]["suggestions"];
+	flag = 0;
+
+	for i in  xrange(len(suggestions_array)):
+		if suggestions_array[i]==u'collation':
+			flag = i;
+			break;
+	actual_suggestion = [];
+	for i in xrange(flag, len(suggestions_array) ):
+		if not suggestions_array[i]==u'collation':
+			actual_suggestion.append(suggestions_array[i]);
+	
+	real_suggestion = str(actual_suggestion);
+	real_suggestion = real_suggestion.replace('\'','\"');
+	real_suggestion = real_suggestion.replace('u\"','\"');
+
+	return str(real_suggestion);
 
 @application.route('/results', methods=['GET', 'POST'])
 def results():
@@ -33,7 +56,7 @@ def results():
 	# for Did you mean? section
 	# http://localhost:8983/solr/wikiArticleCollection/spell?q=alternatie&wt=json&indent=true
 	params = urllib.urlencode({'q': initial_query, 'wt': "json", 'indent' : "true" })
-	
+	print params;
 	did_you_mean = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
 	did_you_mean_object = json.load(did_you_mean)
 	did_you_mean_words = [];
