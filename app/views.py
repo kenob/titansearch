@@ -82,19 +82,24 @@ def related(result_id):
 	twitter_query = "";
 
 	keywords = wiki_article.get('keywords',[])
-	print wiki_article;
 	if not application.config.get('INDEX_KEYWORD_GENERATION'):
 		keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
+	keywords.append(wiki_article["title"][0]);
 	print "keywords : " + str(keywords);
+
 	#since we are favoring precision over recall
 	if len(keywords) > 1:
 		for t in keywords:
 			query_terms += t.split()
 		query_term = "+".join(query_terms)
-		twitter_query = " OR ".join(query_terms)
-
+		query_term = "title:"+wiki_article["title"][0]+"^3 news_body:"+query_term;
 		news_articles = search(news, query_term)
-	related_tweets = search_twitter(twitter_query) ;
+	
+	# twitter_query = " OR ".join(query_terms)
+
+	twitter_query = wiki_article["title"][0];
+	related_tweets = search_twitter(twitter_query ) ;
+
 
 	print "tweets :" + str(related_tweets);
 	if news_articles:
