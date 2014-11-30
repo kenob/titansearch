@@ -73,8 +73,7 @@ class Search(restful.Resource):
 			if len(search_results)>0:
 				error_message = ""
 
-		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page, 
-					has_next=has_next, has_previous=has_previous, num_results=num_results), 200
+		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page, num_results=num_results), 200
 
 	def post(self,**kwargs):
 		return

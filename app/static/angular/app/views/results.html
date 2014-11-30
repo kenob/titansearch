@@ -36,9 +36,10 @@
         </div>
 </div>
 <p ng-bind="error_message"></p>
-<div class="container">
-<pagination total-items="num_results" ng-model="current_page" ng-change="change()"></pagination>
+<div class="container" ng-hide="num_results < 1">
+<pagination total-items="num_results" ng-model="current_page" ng-change="change()" class="pagination-lg"></pagination>
 </div>
+
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div ui-view>

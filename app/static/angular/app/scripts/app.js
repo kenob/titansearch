@@ -31,7 +31,8 @@ angular.module('angularApp', [
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'ui.router.stateHelper'
+  'ui.router.stateHelper',
+  'ui.bootstrap.pagination'
 ])
 .config(function ($stateProvider, $urlRouterProvider,  $resourceProvider) {
   //delete $httpProvider.defaults.headers.common['X-Requested-With'];
