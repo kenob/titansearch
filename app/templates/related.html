@@ -4,6 +4,7 @@
 
 <div class="container main">
     <div class="row">
+    {% autoescape false %}
         <div class="col-md-8">
             <div>
                 <h2>{{wiki_article.title[0]}}</h2>
@@ -11,6 +12,7 @@
                 <p><a href="{{wiki_article.url}}">{{wiki_article.url}}</a></p>
             </div>
         </div>
+        {% endautoescape %}
         {% if related_news %}
         <div class="col-md-4">
             <h3>News</h3>

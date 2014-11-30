@@ -51,8 +51,8 @@ def refresh_index(instance):
 				break
 
 @manager.command
-def parse_wikimedia(input_dir = "/home/kenob/projects/wikindexer/flask-app/wiki_on_the_internet/wiki_from_solr", 
-					output_dir= "/home/kenob/wikimedia"):
+def parse_wikimedia(input_dir = "E:/wikicorpus", 
+					output_dir= "E:/wikicorpusclean"):
 	"""Parses and generates keywords from Wikimedia articles""" 
 	get_keywords = False
 	if application.config.get('INDEX_KEYWORD_GENERATION'):

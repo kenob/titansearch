@@ -11,7 +11,11 @@
             <div>
                 <h2><a href={{ url_for('related', result_id = result.id) }}>{{result.title[0]}}</a></h2>
 
+                {% autoescape false %}
+
                 <p>{{result.wiki_body}}</p>
+
+                {% endautoescape %}
 
                 <p><a href="{{result.url}}">{{result.url}}</a></p>
                 <hr>
@@ -29,17 +33,20 @@
                     <li><a href="#">5</a></li>
                     <li><a href="#"><i class="icon-angle-right"></i></a></li>
                 </ul><!--/.pagination-->
-            </div>
-            
+            </div>            
             {% else %}
             <div>
                 <h2>Sorry. No results found for your search.</h2>
             </div>
+            <br>
+            <div>
+                <h4>Did you mean: <a href="/results?q={{did_you_mean_words[0]}}">{{did_you_mean_words[0]}}</a></h4>
+            </div>
             {% endif %}
+            
         </div>
     </div>
 </div>
-
 
 
 {%endblock%}
