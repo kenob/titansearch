@@ -89,12 +89,11 @@ angular.module('angularApp', [
     };
 
     $rootScope.completeTerm = function(typed){
-
       var res = AutoComplete
             .get({q:typed}, 
               function(data){
-                $rootScope.autoCompleteTerms = data;
-                console.log(data);         
+                console.log(data);    
+                $rootScope.autoCompleteTerms = ['andy', 'murray'];
       });
     };
   }]);

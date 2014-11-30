@@ -11,7 +11,7 @@
 		                <p><a style="color:#1bbc9b" href="{{currentArticle.wiki_article.links[0]}}" target='_blank' ng-bind="link_message"></a></p>
 		            </div>
 		        </div>
-		        <div class="col-md-4" ng-show="currentArticle.related_news.length > 1">
+		        <div class="col-md-4" ng-show="currentArticle.related_news.length > 0">
 		            <h3>News</h3>
 		            <ul class="list-group">
 		                <li class="list-group-item" ng-repeat="result in currentArticle.related_news">
@@ -19,7 +19,7 @@
 		                </li>
 		            </ul>
 		        </div>
-		        <div class="col-md-4" ng-show="currentArticle.related_tweets.length > 1">
+		        <div class="col-md-4" ng-show="currentArticle.related_tweets.length > 0">
 		            <h3>Social Media</h3>
 		            <ul class="list-group">
 		                <li class="list-group-item" ng-repeat="tweet in currentArticle.related_tweets track by tweet">

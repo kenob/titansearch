@@ -165,8 +165,7 @@ class AutoSuggest(restful.Resource):
 		real_suggestion = str(actual_suggestion);
 		real_suggestion = real_suggestion.replace('\'','\"');
 		real_suggestion = real_suggestion.replace('u\"','\"');
-		logger.info(real_suggestion)
-		return (real_suggestion.split(","));
+		return dict(results = real_suggestion.split(","))
 
 
 
