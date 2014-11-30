@@ -30,7 +30,8 @@ def results():
 	print query_term
 	sear = search(wiki, query_term, hl="true")
 	error_message = "No results found for your search!"
-
+	global initial_query 
+	initial_search_term = initial_query ;
 	# for Did you mean? section
 	# http://localhost:8983/solr/wikiArticleCollection/spell?q=alternatie&wt=json&indent=true
 	params = urllib.urlencode({'q': initial_query, 'wt': "json", 'indent' : "true" })
@@ -71,6 +72,9 @@ def related(result_id):
 	wiki_article = dict()
 	news_articles = []
 	form = SearchForm();
+	global initial_query 
+	initial_search_term = initial_query ;
+
 
 
 	wiki_article_solr = get_item(wiki, result_id)
@@ -86,7 +90,7 @@ def related(result_id):
 		keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
 	keywords.append(wiki_article["title"][0]);
 	print "keywords : " + str(keywords);
-	query_term = "";
+	query_term = ""
 	#since we are favoring precision over recall
 	if len(keywords) > 1:
 		for t in keywords:
@@ -95,6 +99,7 @@ def related(result_id):
 	query_term = "title:"+wiki_article["title"][0]+"^3 news_body:"+query_term;
 	news_articles = search(news, query_term)
 	
+
 	# twitter_query = " OR ".join(query_terms)
 
 	twitter_query = wiki_article["title"][0];
