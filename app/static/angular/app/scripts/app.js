@@ -33,7 +33,7 @@ angular.module('angularApp', [
   'ui.router',
   'ui.router.stateHelper',
   'ui.bootstrap.pagination',
-  'autocomplete',\
+  'autocomplete'
 ])
 .config(function ($stateProvider, $urlRouterProvider,  $resourceProvider) {
   //delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -48,6 +48,9 @@ angular.module('angularApp', [
 })
 .factory('SearchResult', function($resource){
   return $resource("/api/async/v1/results/:id");
+})
+.factory('AutoComplete', function($resource){
+  return $resource("/suggest");
 })
 .filter('addEllipsis', function () {
     return function (input, max) {
@@ -69,10 +72,12 @@ angular.module('angularApp', [
         }
     }
 })
-.run(['$rootScope','$sce', '$state', 'Search', function($rootScope, $sce, $state, Search){
+.run(['$rootScope','$sce', '$state', 'Search', function($rootScope, $sce, $state, Search, AutoComplete){
     $rootScope.$state = $state;
     $rootScope.alerts = [];
     $rootScope.searchForm = {};
+    $rootScope.autoCompleteTerms = [];
+
     $rootScope.search = function(){
       var res = Search
             .get($rootScope.searchForm, 
@@ -81,7 +86,16 @@ angular.module('angularApp', [
                 $state.go('results',{},{reload : true});
               });
     };
-}]);
+
+    $rootScope.completeTerm = function(){
+      var res = AutoComplete
+            .get($rootScope.searchForm.q, 
+              function(data){
+                $rootScope.autoCompleteTerms = data;
+                console.log(data);         
+      });
+    };
+  }]);
 
 
 

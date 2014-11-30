@@ -55,8 +55,7 @@ def refresh_index(instance):
 				break
 
 @manager.command
-def parse_wikimedia(input_dir = "E:/wikicorpus", 
-					output_dir= "E:/wikicorpusclean"):
+def parse_wikimedia(input_dir = "E:/wikicorpus", output_dir= "E:/wikicorpusclean"):
 	"""
 	Parses and generates keywords from Wikimedia articles
 	params:
