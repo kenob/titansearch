@@ -63,7 +63,7 @@ def results():
 			if len(search_results)>0:
 				error_message = ""
 
-	return render_template('results.html', **locals(), **globals());
+	return render_template('results.html', **locals());
 
 @application.route('/related/<result_id>')
 def related(result_id):
@@ -98,6 +98,7 @@ def related(result_id):
 	query_term = "title:"+wiki_article["title"][0]+"^3 news_body:"+query_term;
 	news_articles = search(news, query_term)
 	
+	
 	# twitter_query = " OR ".join(query_terms)
 
 	twitter_query = wiki_article["title"][0];
@@ -110,7 +111,7 @@ def related(result_id):
 		#TODO: remove the list comprehension, it was just for design purposes
 		related_news = [news_article for news_article in news_articles if news_article.get('news_body')]
 
-	return render_template('related.html',**locals(),**globals());
+	return render_template('related.html',**locals());
 
 @application.route('/async')
 def index_async():
