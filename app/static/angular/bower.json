@@ -2,7 +2,8 @@
   "name": "angular",
   "version": "0.0.0",
   "dependencies": {
-    "angular-ui-router.stateHelper": "~1.2.0"
+    "angular-ui-router.stateHelper": "~1.2.0",
+    "angular-ui-router-anim-in-out": "~0.0.13"
   },
   "devDependencies": {
     "angular-mocks": "~1.0.7",
@@ -25,5 +26,8 @@
     "app/bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "resolutions": {
+    "angular": ">=1.2.0"
+  }
 }

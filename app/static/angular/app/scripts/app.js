@@ -31,7 +31,8 @@ angular.module('angularApp', [
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'ui.router.stateHelper'
+  'ui.router.stateHelper',
+  'ui.bootstrap.pagination'
 ])
 .config(function ($stateProvider, $urlRouterProvider,  $resourceProvider) {
   //delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -47,13 +48,27 @@ angular.module('angularApp', [
 .factory('SearchResult', function($resource){
   return $resource("/api/async/v1/results/:id");
 })
-.filter('to_trusted', ['$sce', function($sce){
-    return function(text) {
-        return $sce.trustAsHtml(text);
-    };
-}])
-.run(['$rootScope','$sce', '$state', function($rootScope, $sce, $state){
+.filter('range', function() {
+  return function(input, min, max) {
+    min = parseInt(min); //Make string input int
+    max = parseInt(max);
+    for (var i=min; i<max; i++)
+      input.push(i);
+    return input;
+  };
+})
+.run(['$rootScope','$sce', '$state', 'Search', function($rootScope, $sce, $state, Search){
     $rootScope.$state = $state;
+    $rootScope.alerts = [];
+    $rootScope.searchForm = {};
+    $rootScope.search = function(){
+      var res = Search
+            .get($rootScope.searchForm, 
+              function(data){
+                $rootScope.searchResultObject = data;
+                $state.go('results',{},{reload : true});
+              });
+    };
 }]);
 
 

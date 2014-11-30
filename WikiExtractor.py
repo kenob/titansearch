@@ -79,7 +79,7 @@ keepLinks = False
 ##
 # Whether to transform sections into HTML
 #
-keepSections = False
+keepSections = True
 
 ##
 # Recognize only these namespaces

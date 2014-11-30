@@ -13,6 +13,7 @@ angular.module('angularApp')
 							  			$scope.current_page = resultObject.current_page;
 							  			$scope.has_next = resultObject.has_next;
 							  			$scope.has_previous = resultObject.has_previous;
+							  			$scope.num_results = resultObject.num_results;
 	  							};
 
 	  							if(!$rootScope.searchResultObject){
@@ -23,14 +24,8 @@ angular.module('angularApp')
 
 							  	}
 
-							  	$scope.change =  function(direction){
-							  		if(direction=="previous"){
-							  			searchParams.page = $scope.current_page - 1;
-							  		}
-							  		else if(direction=="next"){
-							  			searchParams.page = $scope.current_page + 1;
-							  		}
-
+							  	$scope.change =  function(){
+							  		searchParams.page = $scope.current_page;
 							  		searchParams.q = $rootScope.searchResultObject.query_term;
 							    	var res = Search
 							    				.get(searchParams,

@@ -20,6 +20,11 @@ def runserver():
 
 @manager.command
 def refresh_index(instance):
+	"""
+	Performs a full dataimport on either wikiArticleCollection or the newsArticleCollection
+	params:
+	instance: 'wiki' or 'news'
+	"""
 	base_url = application.config.get('SOLR_URI') + news
 
 	if instance=='wiki':
@@ -50,9 +55,14 @@ def refresh_index(instance):
 				break
 
 @manager.command
-def parse_wikimedia(input_dir = "/Users/dhinesh/Dropbox/UB/dev/misc/yo", 
-					output_dir= "/Users/dhinesh/Dropbox/UB/dev/misc/Wiki"):
-	"""Parses and generates keywords from Wikimedia articles""" 
+def parse_wikimedia(input_dir = "E:/wikicorpus", 
+					output_dir= "E:/wikicorpusclean"):
+	"""
+	Parses and generates keywords from Wikimedia articles
+	params:
+	input_dir: An absolute, flat directory containing ONLY wikimedia articles
+	output_dir: The directory from which wikimedia articles are read by the wikiArticleCollection core
+	""" 
 	get_keywords = False
 	if application.config.get('INDEX_KEYWORD_GENERATION'):
 		get_keywords = True
@@ -60,6 +70,11 @@ def parse_wikimedia(input_dir = "/Users/dhinesh/Dropbox/UB/dev/misc/yo",
 
 @manager.command
 def get_wiki_articles(output_dir):
+	"""
+	Collects keywords and topics from our news corpus and gets corresponding wikipedia pages
+	params:
+	output_dir: an empty/non-existent  sub-directory where the articles should be stored
+	"""
 	if not os.path.exists(output_dir):
 		os.mkdir(output_dir)
 	q = get_top_terms("newsArticleCollection", "keywords", 100)
@@ -80,9 +95,10 @@ def get_wiki_articles(output_dir):
 			if l:
 				pages_obtained = l.splitlines()
 				pages += pages_obtained
-		print "%s pages obtained for %s" % (len(pages_obtained), word)
+		logger.info("%s page titles obtained for %s" % (len(pages_obtained), word))
 	page_params = ("%0A").join(pages)
-	time = "2000-01-27T20:25:56Z"
+	logger.info("A total of %s page titles obtained, now getting pages from Wikipedia...")
+	from_ = "2000-01-27T20:25:56Z"
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export&pages=%s&offset=%s&limit=10000&action=submit"
 	url = "http://en.wikipedia.org/wiki/Special:Export/"
 	for i, page in enumerate(pages):
