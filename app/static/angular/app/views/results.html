@@ -10,9 +10,10 @@
 	    </div>
 	    <div class="collapse navbar-collapse">
 	    <div id="search-box" class="col-lg-3">
+	    <autocomplete ng-model="searchForm.q" data="autoCompleteTerms" on-type="completeTerm"></autocomplete>
             <form role="form" id="searchbar" ng-submit="search()">
 	            <div class="input-group custom-search-form">
-	              <input type="text" ng-model="searchForm.q" class="form-control" size="100" required/>
+      			  
 	              <span class="input-group-btn">
 	              <button id="search-button" class="btn btn-default" type="submit"><!--change this for bg color-->
 	              <span class="glyphicon glyphicon-search"></span>
@@ -35,7 +36,14 @@
             <hr>
         </div>
 </div>
-<h3 ng-bind="error_message"></h3>
+
+<div ng-show="search_results.length < 1">
+	<h3 ng-bind="error_message"></h3>
+	<h3 ng-show="suggested_terms.length > 0">Did you mean: </h3>
+	<div ng-repeat-start="term in suggested_terms"></div>
+	<h4><a href="" ng-click = "searchForm.q = term; search(); " ng-bind="term"></a></h4>
+	<div ng-repeat-end></div>
+</div>
 <div class="container" ng-hide="num_results < 1">
 <div class="row">
 <pagination total-items="num_results" ng-model="current_page" ng-change="change()" class="pagination-lg"></pagination>

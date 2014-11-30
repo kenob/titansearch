@@ -7,6 +7,8 @@ from flask.ext.restful import reqparse
 from json import dumps
 from .search_twitter import search_twitter
 from app import html_parser
+import urllib
+import json
 
 
 api = restful.Api()
@@ -60,6 +62,7 @@ class Search(restful.Resource):
 			has_next = search_results_[2] > 1
 			has_previous = (page - 1) > 0
 			num_results = search_results_[3]
+			
 			for res in search_results:
 				_id = res['id']
 				if _id in result_snippets:
@@ -70,11 +73,25 @@ class Search(restful.Resource):
 				else:
 					del search_results[_id]
 
-		if search_results:
-			if len(search_results)>0:
-				error_message = ""
+		params = urllib.urlencode({'q': qt, 'wt': "json", 'indent' : "true" })
+	
+		did_you_mean = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
+		did_you_mean_object = json.load(did_you_mean)
+		did_you_mean_words = [];
+		try: 
+			did_you_mean_words = [];
+			for word in did_you_mean_object["spellcheck"]["suggestions"][1]["suggestion"]:
+				did_you_mean_words.append(word["word"]);
+		except: 
+			did_you_mean_words = [];
 
-		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page, num_results=num_results), 200
+			if search_results:
+				if len(search_results)>0:
+					error_message = ""
+		suggested_terms = did_you_mean_words
+
+		return dict(search_results=search_results, error_message=error_message, query_term=qt, 
+					current_page=page, num_results=num_results, suggested_terms=suggested_terms), 200
 
 	def post(self,**kwargs):
 		return
