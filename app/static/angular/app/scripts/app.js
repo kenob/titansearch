@@ -32,7 +32,8 @@ angular.module('angularApp', [
   'ngSanitize',
   'ui.router',
   'ui.router.stateHelper',
-  'ui.bootstrap.pagination'
+  'ui.bootstrap.pagination',
+  'autocomplete',\
 ])
 .config(function ($stateProvider, $urlRouterProvider,  $resourceProvider) {
   //delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -47,9 +48,6 @@ angular.module('angularApp', [
 })
 .factory('SearchResult', function($resource){
   return $resource("/api/async/v1/results/:id");
-})
-.factory('AutoComplete', function($resource){
-  return $resource("/suggest");
 })
 .filter('addEllipsis', function () {
     return function (input, max) {
@@ -71,18 +69,10 @@ angular.module('angularApp', [
         }
     }
 })
-.run(['$rootScope','$sce', '$state', 'Search', 'AutoComplete', function($rootScope, $sce, $state, Search, AutoComplete){
+.run(['$rootScope','$sce', '$state', 'Search', function($rootScope, $sce, $state, Search){
     $rootScope.$state = $state;
     $rootScope.alerts = [];
     $rootScope.searchForm = {};
-    $rootScope.autoCompleteTerms = [];
-
-    $rootScope.completeTerm = function(){
-      var get = AutoComplete.get($rootScope.searchForm.q, function(data){
-                      $rootScope.autoCompleteTerms = data;
-                      console.log(data);
-                    }
-    }
     $rootScope.search = function(){
       var res = Search
             .get($rootScope.searchForm, 

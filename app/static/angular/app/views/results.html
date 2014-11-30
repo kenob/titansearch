@@ -12,7 +12,7 @@
 	    <div id="search-box" class="col-lg-3">
             <form role="form" id="searchbar" ng-submit="search()">
 	            <div class="input-group custom-search-form">
-	              <input type="text" ng-model="searchForm.q" class="form-control" size="100" required/>
+      			  <autocomplete ng-model="searchForm.q" data="autoCompleteTerms" on-type="completeTerm()"></autocomplete>
 	              <span class="input-group-btn">
 	              <button id="search-button" class="btn btn-default" type="submit"><!--change this for bg color-->
 	              <span class="glyphicon glyphicon-search"></span>
