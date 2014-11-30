@@ -35,7 +35,14 @@
             <hr>
         </div>
 </div>
-<h3 ng-bind="error_message"></h3>
+
+<div ng-show="search_results.length < 1">
+	<h3 ng-bind="error_message"></h3>
+	<h3 ng-show="suggested_terms.length > 0">Did you mean: </h3>
+	<div ng-repeat-start="term in suggested_terms"></div>
+	<h4><a href="" ng-click = "searchForm.q = term; search(); " ng-bind="term"></a></h4>
+	<div ng-repeat-end></div>
+</div>
 <div class="container" ng-hide="num_results < 1">
 <div class="row">
 <pagination total-items="num_results" ng-model="current_page" ng-change="change()" class="pagination-lg"></pagination>

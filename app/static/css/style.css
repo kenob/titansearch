@@ -65,3 +65,12 @@ header{
 margin-right: 5px;
 border: 0;
 }
+
+.list-group-item {
+padding: 5px 10px;
+}
+
+h5, .h5 {
+margin-top: 5px;
+margin-bottom: 5px;
+}
