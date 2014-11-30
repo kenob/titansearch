@@ -86,7 +86,7 @@ def related(result_id):
 		keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
 	keywords.append(wiki_article["title"][0]);
 	print "keywords : " + str(keywords);
-
+	query_term = "";
 	#since we are favoring precision over recall
 	if len(keywords) > 1:
 		for t in keywords:
