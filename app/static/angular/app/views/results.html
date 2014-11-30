@@ -6,7 +6,7 @@
 	       <span class="sr-only">Toggle navigation</span>
 	       <span class="glyphicon glyphicon-search" style="color:#fff"></span>
 	       </button>
-	        <a class="navbar-brand" href="/index"><img src="../static/images/logo.png" alt="logo"></a>
+	        <a class="navbar-brand" href="/async"><img src="../static/images/logo.png" alt="logo"></a>
 	    </div>
 	    <div class="collapse navbar-collapse">
 	    <div id="search-box" class="col-lg-3">
@@ -31,7 +31,7 @@
         <div>
 			<h2 data-toggle="modal" data-target="#myModal"><a ui-sref=".related({doc_id : result.id})">{{result.title[0]}}</a></h2>
 			<p><div ng-bind-html="result.wiki_body"></div></p>
-			<h5><a href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></h5>
+			<h5><a style="color:#1bbc9b" href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></h5>
             <hr>
         </div>
 </div>

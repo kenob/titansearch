@@ -1,26 +1,26 @@
     <div class="modal-content">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 		<div class="container" id ="results">
 		    <div class="row">
 		        <div class="col-md-8">
 		            <div>
 		                <h2 ng-bind="currentArticle.wiki_article.title[0]"></h2>
 		                <p ng-bind-html="currentArticle.wiki_article.wiki_body[0] | addEllipsis:1000">loading...</p>
-		                <p><a href="{{currentArticle.wiki_article.links[0]}}" target='_blank' ng-bind="link_message"></a></p>
+		                <p><a style="color:#1bbc9b" href="{{currentArticle.wiki_article.links[0]}}" target='_blank' ng-bind="link_message"></a></p>
 		            </div>
 		        </div>
 		        <div class="col-md-4" ng-show="currentArticle.related_news.length > 1">
 		            <h3>News</h3>
-		            <ul class="list-group" ng-repeat="result in currentArticle.related_news">
-		                <li class="list-group-item">
-		                    <h4><a href="{{result['links'][0]}}" target= "_blank" ng-bind="result.title[0]"></a></h4>
-		                    <div ng-bind="result.news_body[0] | addEllipsis:200"></div>
+		            <ul class="list-group">
+		                <li class="list-group-item" ng-repeat="result in currentArticle.related_news">
+		                    <h5><a href="{{result['links'][0]}}" target= "_blank" ng-bind="result.title[0]"></a></h5>
 		                </li>
 		            </ul>
 		        </div>
 		        <div class="col-md-4" ng-show="currentArticle.related_tweets.length > 1">
 		            <h3>Social Media</h3>
-		            <ul class="list-group" ng-repeat="tweet in currentArticle.related_tweets track by tweet">
-		                <li class="list-group-item">
+		            <ul class="list-group">
+		                <li class="list-group-item" ng-repeat="tweet in currentArticle.related_tweets track by tweet">
 		                    <p>{{tweet}}</p>
 		                </li>
 		            </ul>

@@ -56,3 +56,6 @@ header{
 	background-color: #f5f5f5;
 }
 
+#results{
+	max-height: 500px;
+}
