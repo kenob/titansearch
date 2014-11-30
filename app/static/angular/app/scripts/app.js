@@ -53,7 +53,14 @@ angular.module('angularApp', [
         if (input) {
             // Replace this with the real implementation
             if(input.length > max){
-              return input.substring(0, max) + '...';  
+              while(!(/\s/.test(input.charAt(max)))){
+                max++;
+                if(max > input.length)
+                {
+                  return input;
+                }
+              }
+              return input.substring(0, max) + ' ...';  
             }
             else{
               return input;
