@@ -92,8 +92,8 @@ def related(result_id):
 		for t in keywords:
 			query_terms += t.split()
 		query_term = "+".join(query_terms)
-		query_term = "title:"+wiki_article["title"][0]+"^3 news_body:"+query_term;
-		news_articles = search(news, query_term)
+	query_term = "title:"+wiki_article["title"][0]+"^3 news_body:"+query_term;
+	news_articles = search(news, query_term)
 	
 	# twitter_query = " OR ".join(query_terms)
 
