@@ -5,10 +5,6 @@
 	width: 450px; 
 }}
 
-.modal-content #results{
-	max-height: 600px;
-}
-
 #search-text {
 	border-top-left-radius: 4px;
 	border-bottom-left-radius: 4px;
@@ -60,8 +56,6 @@ header{
 	background-color: #f5f5f5;
 }
 
-.modal button {
-/* margin-left: 10px; */
-margin-right: 5px;
-border: 0;
+#results{
+	max-height: 500px;
 }

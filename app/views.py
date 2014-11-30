@@ -8,7 +8,7 @@ from .search_twitter import search_twitter
 import urllib
 import json
 
-global initial_query;	
+initial_query = "";	
 #TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
 @application.route('/', methods=['GET', 'POST'])
 @application.route('/index', methods=['GET', 'POST'])
@@ -38,9 +38,11 @@ def suggest():
 			actual_suggestion.append(suggestions_array[i]);
 	
 	real_suggestion = str(actual_suggestion);
+	print real_suggestion;
 	real_suggestion = real_suggestion.replace('\'','\"');
+	print real_suggestion;
 	real_suggestion = real_suggestion.replace('u\"','\"');
-
+	print real_suggestion;
 	return str(real_suggestion);
 
 @application.route('/results', methods=['GET', 'POST'])
@@ -49,10 +51,12 @@ def results():
 	query_terms = qt.split()
 	query_term = "+".join(query_terms)
 	form = SearchForm();
-
+	query_term = "title:"+query_term+"^3 wiki_body:"+query_term;
+	print query_term
 	sear = search(wiki, query_term, hl="true")
 	error_message = "No results found for your search!"
-
+	global initial_query 
+	initial_search_term = initial_query
 	# for Did you mean? section
 	# http://localhost:8983/solr/wikiArticleCollection/spell?q=alternatie&wt=json&indent=true
 	params = urllib.urlencode({'q': initial_query, 'wt': "json", 'indent' : "true" })
@@ -93,6 +97,9 @@ def related(result_id):
 	wiki_article = dict()
 	news_articles = []
 	form = SearchForm();
+	global initial_query 
+	initial_search_term = initial_query
+
 
 
 	wiki_article_solr = get_item(wiki, result_id)
@@ -104,19 +111,25 @@ def related(result_id):
 	twitter_query = "";
 
 	keywords = wiki_article.get('keywords',[])
-
 	if not application.config.get('INDEX_KEYWORD_GENERATION'):
 		keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
+	keywords.append(wiki_article["title"][0]);
 	print "keywords : " + str(keywords);
+	query_term = ""
 	#since we are favoring precision over recall
 	if len(keywords) > 1:
 		for t in keywords:
 			query_terms += t.split()
 		query_term = "+".join(query_terms)
-		twitter_query = " OR ".join(query_terms)
+	query_term = "title:"+wiki_article["title"][0]+"^3 news_body:"+query_term;
+	news_articles = search(news, query_term)
+	
 
-		news_articles = search(news, query_term)
-	related_tweets = search_twitter(twitter_query) ;
+	# twitter_query = " OR ".join(query_terms)
+
+	twitter_query = wiki_article["title"][0];
+	related_tweets = search_twitter(twitter_query ) ;
+
 
 	print "tweets :" + str(related_tweets);
 	if news_articles:

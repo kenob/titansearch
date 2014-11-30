@@ -31,7 +31,8 @@ angular.module('angularApp', [
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'ui.router.stateHelper'
+  'ui.router.stateHelper',
+  'ui.bootstrap.pagination'
 ])
 .config(function ($stateProvider, $urlRouterProvider,  $resourceProvider) {
   //delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -47,13 +48,38 @@ angular.module('angularApp', [
 .factory('SearchResult', function($resource){
   return $resource("/api/async/v1/results/:id");
 })
-.filter('to_trusted', ['$sce', function($sce){
-    return function(text) {
-        return $sce.trustAsHtml(text);
-    };
-}])
-.run(['$rootScope','$sce', '$state', function($rootScope, $sce, $state){
+.filter('addEllipsis', function () {
+    return function (input, max) {
+        if (input) {
+            // Replace this with the real implementation
+            if(input.length > max){
+              while(!(/\s/.test(input.charAt(max)))){
+                max++;
+                if(max > input.length)
+                {
+                  return input;
+                }
+              }
+              return input.substring(0, max) + ' ...';  
+            }
+            else{
+              return input;
+            }
+        }
+    }
+})
+.run(['$rootScope','$sce', '$state', 'Search', function($rootScope, $sce, $state, Search){
     $rootScope.$state = $state;
+    $rootScope.alerts = [];
+    $rootScope.searchForm = {};
+    $rootScope.search = function(){
+      var res = Search
+            .get($rootScope.searchForm, 
+              function(data){
+                $rootScope.searchResultObject = data;
+                $state.go('results',{},{reload : true});
+              });
+    };
 }]);
 
 

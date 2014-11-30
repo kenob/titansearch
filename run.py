@@ -1,5 +1,5 @@
 from flask.ext.script import Manager
-from app import application, wiki, news, keyword_extractor
+from app import application, wiki, news, keyword_extractor, logger
 import os
 from urllib import *
 import json, time, requests
@@ -7,7 +7,6 @@ from app.resources import api
 from WikiExtractor import parse_wiki
 from app.utils import get_top_terms, get_keywords
 import time
-from bs4 import BeautifulSoup
 import html5lib
 from lxml import html
 
@@ -21,6 +20,11 @@ def runserver():
 
 @manager.command
 def refresh_index(instance):
+	"""
+	Performs a full dataimport on either wikiArticleCollection or the newsArticleCollection
+	params:
+	instance: 'wiki' or 'news'
+	"""
 	base_url = application.config.get('SOLR_URI') + news
 
 	if instance=='wiki':
@@ -51,9 +55,14 @@ def refresh_index(instance):
 				break
 
 @manager.command
-def parse_wikimedia(input_dir = "/home/kenob/projects/wikindexer/flask-app/wiki_on_the_internet/wiki_from_solr", 
-					output_dir= "/home/kenob/wikimedia"):
-	"""Parses and generates keywords from Wikimedia articles""" 
+def parse_wikimedia(input_dir = "E:/wikicorpus", 
+					output_dir= "E:/wikicorpusclean"):
+	"""
+	Parses and generates keywords from Wikimedia articles
+	params:
+	input_dir: An absolute, flat directory containing ONLY wikimedia articles
+	output_dir: The directory from which wikimedia articles are read by the wikiArticleCollection core
+	""" 
 	get_keywords = False
 	if application.config.get('INDEX_KEYWORD_GENERATION'):
 		get_keywords = True
@@ -61,13 +70,19 @@ def parse_wikimedia(input_dir = "/home/kenob/projects/wikindexer/flask-app/wiki_
 
 @manager.command
 def get_wiki_articles(output_dir):
+	"""
+	Collects keywords and topics from our news corpus and gets corresponding wikipedia pages
+	params:
+	output_dir: an empty/non-existent  sub-directory where the articles should be stored
+	"""
 	if not os.path.exists(output_dir):
 		os.mkdir(output_dir)
-	q = get_top_terms("newsArticleCollection", "keywords", 100)
+	q = get_top_terms("newsArticleCollection", "title", 100)
 	if q['status'] == 'Unsuccessful':
 		print "Solr request Unsuccessful"
 		return
 	words = q.get('words')
+	logger.info(words)
 	s = requests.Session()
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export"
 	pages = []
@@ -81,14 +96,15 @@ def get_wiki_articles(output_dir):
 			if l:
 				pages_obtained = l.splitlines()
 				pages += pages_obtained
-		print "%s pages obtained for %s" % (len(pages_obtained), word)
+		logger.info("%s page titles obtained for %s" % (len(pages_obtained), word))
 	page_params = ("%0A").join(pages)
-	time = "2000-01-27T20:25:56Z"
+	logger.info("A total of %s page titles obtained, now getting pages from Wikipedia..." % len(pages))
+	from_ = "2000-01-27T20:25:56Z"
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export&pages=%s&offset=%s&limit=10000&action=submit"
 	url = "http://en.wikipedia.org/wiki/Special:Export/"
 	for i, page in enumerate(pages):
 		r = s.get(url+page)
-		with open(os.path.join(output_dir, "wiki_%s" % i), 'wr') as out:
+		with open(os.path.join(output_dir, "wiki_%s.xml" % i), 'wr') as out:
 			out.write(r.text.encode('utf8'))
 
 @manager.command

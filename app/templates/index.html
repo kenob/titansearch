@@ -14,7 +14,7 @@
                      <form role="form" id="form" method="post" action="/">
                         <div class="form-group">
                            {{form.csrf_token}}
-                            {{form.query(class="form-control")}}
+                            {{form.query(class="form-control",id="autocomplete")}}
                             {% for error in form.query.errors %} 
                             <span style="color: red;">[{{ error }}]</span>
                             {% endfor%}

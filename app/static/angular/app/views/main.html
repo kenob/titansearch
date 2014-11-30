@@ -1,8 +1,112 @@
- <div class="center-block">	
- 	<form class="form-inline" ng-submit="search()">
-	    <div class="input-group">
-			 <input type="text" ng-model="searchForm.q" placeholder="Enter search terms" size="1000" required>
-			 <input type = "submit" value="Search">
-		</div>
-	</form>
-</div>
+<header class="navbar navbar-inverse navbar-fixed-top wet-asphalt" role="banner">
+	<div class="container">
+	    <div class="navbar-header">
+	       </button>
+	        <a class="navbar-brand" href="/async"><img src="../static/images/logo.png" alt="logo"></a>
+	    </div>
+	    <div class="collapse navbar-collapse">
+	    </div>
+	</div>
+</header><!--/header-->
+
+<div class="container theme-showcase" role="main">
+         <!-- Main jumbotron for a primary marketing message or call to action -->
+         <div class="jumbotron text-center">
+            <h1>Welcome to Titan Search</h1>
+            <p>Use our search feature to look for Wikipedia articles and we'll make your life easier by automatically pulling the latest news and social media posts that are relevant to the Wiki page you choose. Search on!</p>
+            <div class="container">
+               <div class="row">
+                  <div class="col-md-8 col-md-offset-2">
+                     <form role="form" id="form" ng-submit="search()">
+                        <div class="form-group">
+                            <input type="text" ng-model="searchForm.q" placeholder="Enter search terms" class="form-control" required>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <p><input type="submit" class="btn btn-primary btn-lg" value="Search &raquo" form="form"></p>
+         </div>
+      </div>
+      <!-- /container -->
+          <section id="services" class="emerald">
+        <div class="container">
+            <div class="row">
+            <div class="center">
+                        <h2>Where we get our information from</h2><br>
+                    </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="media">
+                        <div class="pull-left">
+                            <i class="icon-align-left icon-md"></i>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="media-heading">Wikipedia</h3>
+                            <p>Wikipedia is the world's largest and most popular free encyclopedia. We enable you to search a large range of topics from the English Wikipedia which consists of over 4.6 million articles.</p>
+                        </div>
+                    </div>
+                </div><!--/.col-md-4-->
+                <div class="col-md-4 col-sm-6">
+                    <div class="media">
+                        <div class="pull-left">
+                            <i class="icon-file icon-md"></i>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="media-heading">News</h3>
+                            <p>News is one of the fastest growing sectors of the Internet. We index more than 10 thousand articles to find the latest news that relates to your search.</p>
+                        </div>
+                    </div>
+                </div><!--/.col-md-4-->
+                <div class="col-md-4 col-sm-6">
+                    <div class="media">
+                        <div class="pull-left">
+                            <i class="icon-twitter icon-md"></i>
+                        </div>
+                        <div class="media-body">
+                            <h3 class="media-heading">Twitter</h3>
+                            <p>Twitter is the world's source for the latest happenings all over the globe. Our search over Twitter feeds make surethat you are never of the loop from what's happening right now.</p>
+                        </div>
+                    </div>
+                </div><!--/.col-md-4-->
+            </div>
+        </div>
+    </section><!--/#services-->
+
+    <section id="testimonial" class="alizarin">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="center">
+                        <h2>Team Titan</h2>
+                    </div>
+                    <div class="gap"></div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <blockquote>
+                                <p>Dhinesh Nakkeerar</p>
+                                <small>Python Backend, Twitter</small>
+                            </blockquote>
+                        </div>
+                        <div class="col-md-3">
+                            <blockquote>
+                                <p>Oghenekeno Obrutu</p>
+                                <small>News Indexing</small>
+                            </blockquote>
+                        </div>
+                        <div class="col-md-3">
+                            <blockquote>
+                                <p>Pravin Umamaheswaran</p>
+                                <small>Wikipedia Indexing</small>
+                            </blockquote>
+                        </div>
+                        <div class="col-md-3">
+                            <blockquote>
+                                <p>Shishir Ambastha</p>
+                                <small>User Interface</small>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!--/#testimonial-->

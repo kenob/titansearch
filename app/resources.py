@@ -6,6 +6,7 @@ from app import application, news, wiki, logger
 from flask.ext.restful import reqparse
 from json import dumps
 from .search_twitter import search_twitter
+from app import html_parser
 
 
 api = restful.Api()
@@ -49,6 +50,7 @@ class Search(restful.Resource):
 
 		search_results = None
 		search_results_ = search(wiki, query_term, page=page, rows=rows)
+		num_pages = 0;
 
 		error_message = "No results found for your search!"
 
@@ -57,6 +59,7 @@ class Search(restful.Resource):
 			result_snippets = search_results_[1]
 			has_next = search_results_[2] > 1
 			has_previous = (page - 1) > 0
+			num_results = search_results_[3]
 			for res in search_results:
 				_id = res['id']
 				if _id in result_snippets:
@@ -71,7 +74,8 @@ class Search(restful.Resource):
 			if len(search_results)>0:
 				error_message = ""
 
-		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page, has_next=has_next, has_previous=has_previous), 200
+		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page, num_results=num_results), 200
+
 	def post(self,**kwargs):
 		return
 
@@ -103,16 +107,18 @@ class SearchResult(restful.Resource):
 		# if not application.config.get('INDEX_KEYWORD_GENERATION'):
 		# 	keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
 		# 	logger.info(keywords)
+		twitter_query = wiki_article["title"][0];
 
 		#since we are favoring precision over recall
 		query_terms = ["\""+t+"\"" for t in keywords]
-		query_term = "+OR+".join(query_terms)
+		query_terms = wiki_article['title'][0].split()
+		query_term = "+".join(query_terms)
+
 		if query_term:
-			twitter_query = " OR ".join(query_terms)
-			news_articles = search(news, query_term)
+			news_articles = search(news, query_term, defType="edismax", mm=2, qf="title^20.0+keywords^20.0+body^2.0")[0]
 		related_tweets = search_twitter(twitter_query) ;
-		logger.info(news_articles)
-		return dict(related_news=news_articles, wiki_article=wiki_article, related_tweets=related_tweets), 200
+		related_tweets = [html_parser.unescape(tweet) for tweet in related_tweets]
+		return dict(related_news=news_articles[:3], wiki_article=wiki_article, related_tweets=related_tweets), 200
 	def post(self, **kwargs):
 		return
 

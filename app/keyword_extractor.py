@@ -28,8 +28,6 @@ def extract_keywords(body_text):
 
 	if not 'annotations' in data:
 		return dict(status=True, keywords=[])
-	print "sdfsdfsdfsdfsdfsdfsdfsdfsdF"
-	print "keyword :" +  str([datum['spot'] for datum in data['annotations']]);
 	return dict(status=True, keywords=[datum['spot'] for datum in data['annotations']])
 	
 

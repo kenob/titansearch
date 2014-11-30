@@ -21,8 +21,10 @@ def search(collection, query_string="*:*", page=1, rows=10, **kwargs):
 	try:
 		conn = urlopen('%s%s/select/?&q=%s&wt=python&%s' % (base_url, collection, query_string, additional_args))
 		result = eval(conn.read())
-		results_left = int(result['response'].get('numFound')) - (start + rows)
-		return result['response'].get('docs',[]), result.get('highlighting',dict()), results_left
+		numRes = result['response'].get('numFound')
+		results_left = int(numRes) - (start + rows)
+		num_pages = numRes/rows
+		return result['response'].get('docs',[]), result.get('highlighting',dict()), results_left, numRes
 	except:
 		return False
 
@@ -47,6 +49,7 @@ def get_top_terms(collection="newsArticleCollection", field="keywords", limit=10
 	except:
 		return dict(status="Unsuccessful", words=[])
 	words = [r for r in res['terms'].get('keywords',[]) if not type(r)==int]
+	logger.info(words)
 	return dict(status="Successful", words=words)
 
 def parse_to_alphanumeric(input_string):   

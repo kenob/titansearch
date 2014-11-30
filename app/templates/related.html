@@ -4,6 +4,7 @@
 
 <div class="container main">
     <div class="row">
+    {% autoescape false %}
         <div class="col-md-8">
             <div>
                 <h2>{{wiki_article.title[0]}}</h2>
@@ -11,14 +12,14 @@
                 <p><a href="{{wiki_article.url}}">{{wiki_article.url}}</a></p>
             </div>
         </div>
+        {% endautoescape %}
         {% if related_news %}
         <div class="col-md-4">
             <h3>News</h3>
             <ul class="list-group">
                 {% for result in related_news%}
                 <li class="list-group-item">
-                    <h4><a href="{{result['links'][0]}}" target= "_blank">{{result.get('title',[])[0]}}</a></h4>
-                    <p>{{result.get('news_body',[])[0]}}<p>
+                    <h5><a href="{{result['links'][0]}}" target= "_blank">{{result.get('title',[])[0]}}</a></h5>
                 </li>
                 {% endfor %}
             </ul>
