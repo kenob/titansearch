@@ -35,8 +35,10 @@ def results():
 	params = urllib.urlencode({'q': initial_query, 'wt': "json", 'indent' : "true" })
 	
 	did_you_mean = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
-
-	did_you_mean_json = did_you_mean.read()
+	did_you_mean_object = json.load(did_you_mean)
+	did_you_mean_words = [];
+	for word in did_you_mean_object["spellcheck"]["suggestions"][1]["suggestion"]:
+		did_you_mean_words.append(word["word"]);
 
 	#currently returning only results that were highlighted
 	if sear:
@@ -79,7 +81,7 @@ def related(result_id):
 
 	if not application.config.get('INDEX_KEYWORD_GENERATION'):
 		keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')
-
+	print "keywords : " + str(keywords);
 	#since we are favoring precision over recall
 	if len(keywords) > 1:
 		for t in keywords:
@@ -90,7 +92,7 @@ def related(result_id):
 		news_articles = search(news, query_term)
 	related_tweets = search_twitter(twitter_query) ;
 
-	print twitter_query;
+	print "tweets :" + str(related_tweets);
 	if news_articles:
 		news_articles = news_articles[0]
 		#TODO: remove the list comprehension, it was just for design purposes
