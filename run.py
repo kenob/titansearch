@@ -1,5 +1,5 @@
 from flask.ext.script import Manager
-from app import application, wiki, news, keyword_extractor
+from app import application, wiki, news, keyword_extractor, logger
 import os
 from urllib import *
 import json, time, requests
@@ -77,11 +77,12 @@ def get_wiki_articles(output_dir):
 	"""
 	if not os.path.exists(output_dir):
 		os.mkdir(output_dir)
-	q = get_top_terms("newsArticleCollection", "keywords", 100)
+	q = get_top_terms("newsArticleCollection", "title", 100)
 	if q['status'] == 'Unsuccessful':
 		print "Solr request Unsuccessful"
 		return
 	words = q.get('words')
+	logger.info(words)
 	s = requests.Session()
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export"
 	pages = []
@@ -97,7 +98,7 @@ def get_wiki_articles(output_dir):
 				pages += pages_obtained
 		logger.info("%s page titles obtained for %s" % (len(pages_obtained), word))
 	page_params = ("%0A").join(pages)
-	logger.info("A total of %s page titles obtained, now getting pages from Wikipedia...")
+	logger.info("A total of %s page titles obtained, now getting pages from Wikipedia..." % len(pages))
 	from_ = "2000-01-27T20:25:56Z"
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export&pages=%s&offset=%s&limit=10000&action=submit"
 	url = "http://en.wikipedia.org/wiki/Special:Export/"
