@@ -6,5 +6,6 @@ angular.module('angularApp')
     				.get({id:$stateParams.doc_id}, 
 			    		function(data){
 			    				$scope.currentArticle = data;
+			    				console.log(data)
 				  		});
   });
