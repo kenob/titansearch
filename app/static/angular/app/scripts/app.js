@@ -72,7 +72,7 @@ angular.module('angularApp', [
         }
     }
 })
-.run(['$rootScope','$sce', '$state', 'Search', function($rootScope, $sce, $state, Search, AutoComplete){
+.run(['$rootScope','$sce', '$state', 'Search', 'AutoComplete', function($rootScope, $sce, $state, Search, AutoComplete){
     $rootScope.$state = $state;
     $rootScope.alerts = [];
     $rootScope.searchForm = {};
@@ -88,10 +88,10 @@ angular.module('angularApp', [
               });
     };
 
-    $rootScope.completeTerm = function(){
-      console.log($rootScope.searchForm.q)
+    $rootScope.completeTerm = function(typed){
+
       var res = AutoComplete
-            .get($rootScope.searchForm.q, 
+            .get(typed, 
               function(data){
                 $rootScope.autoCompleteTerms = data;
                 console.log(data);         
