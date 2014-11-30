@@ -37,7 +37,7 @@ def twitterRequest(url, method, parameters):
     return response
 
 def search_twitter(search_term):
-    url = "https://api.twitter.com/1.1/search/tweets.json?language=en&q="+search_term
+    url = "https://api.twitter.com/1.1/search/tweets.json?lang=en&q="+search_term
 
     print "search term : " + search_term
     parameters = []
@@ -58,6 +58,7 @@ def search_twitter(search_term):
 
         # for result in results:
         #     print result
+
         return results
     return results;
 
