@@ -76,6 +76,7 @@ angular.module('angularApp', [
     $rootScope.$state = $state;
     $rootScope.alerts = [];
     $rootScope.searchForm = {};
+    $rootScope.searchForm.q = "";
     $rootScope.autoCompleteTerms = [];
 
     $rootScope.search = function(){
@@ -88,6 +89,7 @@ angular.module('angularApp', [
     };
 
     $rootScope.completeTerm = function(){
+      console.log($rootScope.searchForm.q)
       var res = AutoComplete
             .get($rootScope.searchForm.q, 
               function(data){
