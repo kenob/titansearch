@@ -8,7 +8,7 @@ from .search_twitter import search_twitter
 import urllib
 import json
 
-global initial_query;	
+initial_query = "";	
 #TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
 @application.route('/', methods=['GET', 'POST'])
 @application.route('/index', methods=['GET', 'POST'])
@@ -31,7 +31,7 @@ def results():
 	sear = search(wiki, query_term, hl="true")
 	error_message = "No results found for your search!"
 	global initial_query 
-	initial_search_term = initial_query ;
+	initial_search_term = initial_query
 	# for Did you mean? section
 	# http://localhost:8983/solr/wikiArticleCollection/spell?q=alternatie&wt=json&indent=true
 	params = urllib.urlencode({'q': initial_query, 'wt': "json", 'indent' : "true" })
@@ -73,7 +73,7 @@ def related(result_id):
 	news_articles = []
 	form = SearchForm();
 	global initial_query 
-	initial_search_term = initial_query ;
+	initial_search_term = initial_query
 
 
 
