@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('angularApp')
-  .controller('RelatedCtrl', function ($scope, SearchResult, $stateParams) {
+  .controller('RelatedCtrl', function ($scope, SearchResult, $stateParams, TwitterNearby) {
   	    	var res = SearchResult
     				.get({id:$stateParams.doc_id}, 
 			    		function(data){

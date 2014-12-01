@@ -52,6 +52,9 @@ angular.module('angularApp', [
 .factory('AutoComplete', function($resource){
   return $resource("/api/async/v1/suggest");
 })
+.factory('TwitterNearby', function($resource){
+  return $resource("/api/async/v1/twitter_nearby");
+})
 .filter('addEllipsis', function () {
     return function (input, max) {
         if (input) {
@@ -72,31 +75,40 @@ angular.module('angularApp', [
         }
     }
 })
-.run(['$rootScope','$sce', '$state', 'Search', 'AutoComplete', function($rootScope, $sce, $state, Search, AutoComplete){
-    $rootScope.$state = $state;
-    $rootScope.alerts = [];
-    $rootScope.searchForm = {};
-    $rootScope.searchForm.q = "";
-    $rootScope.autoCompleteTerms = [];
+.run(['$rootScope','$sce', '$state', 'Search', 'AutoComplete', 'TwitterNearby', 
+    function($rootScope, $sce, $state, Search, AutoComplete, TwitterNearby){
+            $rootScope.$state = $state;
+            $rootScope.alerts = [];
+            $rootScope.searchForm = {};
+            $rootScope.searchForm.q = "";
+            $rootScope.autoCompleteTerms = [];
 
-    $rootScope.search = function(){
-      var res = Search
-            .get($rootScope.searchForm, 
-              function(data){
-                $rootScope.searchResultObject = data;
-                $state.go('results',{},{reload : true});
+            $rootScope.search = function(){
+              var res = Search
+                    .get($rootScope.searchForm, 
+                      function(data){
+                        $rootScope.searchResultObject = data;
+                        $state.go('results',{},{reload : true});
+                      });
+            };
+
+            $rootScope.completeTerm = function(typed){
+              if(typed.length>1){
+              var res = AutoComplete
+                    .get({q:typed}, 
+                      function(data){
+                        $rootScope.autoCompleteTerms = data.results;
               });
-    };
-
-    $rootScope.completeTerm = function(typed){
-      if(typed.length>1){
-      var res = AutoComplete
-            .get({q:typed}, 
-              function(data){
-                $rootScope.autoCompleteTerms = data.results;
-      });
-          }
-    };
+                  }
+            };
+            $rootScope.getNearby = function(title){
+                  var res = TwitterNearby
+                    .get({title:title},
+                      function(data){
+                          return data.tweets;
+                      });
+                  return [];
+            };
   }]);
 
 

@@ -179,4 +179,4 @@ class TwitterNearBy(restful.Resource):
 api.add_resource(Search, '/api/async/v1/')
 api.add_resource(AutoSuggest, '/api/async/v1/suggest')
 api.add_resource(SearchResult, '/api/async/v1/results/<wiki_id>')
-api.add_resource(TwitterNearBy, '/api/async/twitter_nearby')
+api.add_resource(TwitterNearBy, '/api/async/v1/twitter_nearby')

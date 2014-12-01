@@ -15,7 +15,6 @@ angular.module('angularApp')
 							  			$scope.has_previous = resultObject.has_previous;
 							  			$scope.num_results = resultObject.num_results;
 							  			$scope.suggested_terms = resultObject.suggested_terms;
-							  			console.log($scope.suggested_terms);
 	  							};
 
 	  							if(!$rootScope.searchResultObject){
