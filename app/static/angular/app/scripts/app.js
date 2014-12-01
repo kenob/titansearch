@@ -89,12 +89,14 @@ angular.module('angularApp', [
     };
 
     $rootScope.completeTerm = function(typed){
+      if(typed.length>1){
       var res = AutoComplete
             .get({q:typed}, 
               function(data){
                 console.log(data.results);    
-                $rootScope.autoCompleteTerms.push('bad');
+                $rootScope.autoCompleteTerms = data.results;
       });
+          }
     };
   }]);
 

@@ -147,8 +147,10 @@ class AutoSuggest(restful.Resource):
 		logger.info(qt)
 		if not qt:
 			return dict(results=[]),200
-		params = urllib.urlencode({"q":request.args.get('term'), 'wt': "json", 'indent' : "true" });
-		suggestions = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/suggest?%s" % params)
+		params = urllib.urlencode({"q":qt, 'wt': "json", 'indent' : "true" });
+		url = "http://localhost:8983/solr/wikiArticleCollection/suggest?%s" % params
+		logger.info(url)
+		suggestions = urllib.urlopen(url)
 		suggestions_object = json.load(suggestions);
 		suggestions_array = suggestions_object["spellcheck"]["suggestions"];
 		flag = 0;
@@ -161,11 +163,7 @@ class AutoSuggest(restful.Resource):
 		for i in xrange(flag, len(suggestions_array) ):
 			if not suggestions_array[i]==u'collation':
 				actual_suggestion.append(suggestions_array[i]);
-		
-		real_suggestion = str(actual_suggestion);
-		real_suggestion = real_suggestion.replace('\'','\"');
-		real_suggestion = real_suggestion.replace('u\"','\"');
-		return dict(results = real_suggestion.split(","))
+		return dict(results = actual_suggestion)
 
 class TwitterNearBy(restful.Resource):
 	def get(self, **kwargs):
