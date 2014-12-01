@@ -7,6 +7,8 @@ angular.module('angularApp')
              	  var nearby = {text: "Show nearby tweets", status_bool:false, param:"False"};
              	  if($scope.nearby.status_bool){
              	  		nearby = {text: "Show All tweets", status_bool:true, param:"True"};
+  			 			$scope.nearby = nearby;
+
              	  }
                   var res = TwitterNearby
                     .get({title:$scope.currentArticle.wiki_article.title[0], nearby:nearby.param},
