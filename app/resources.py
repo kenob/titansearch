@@ -167,13 +167,16 @@ class AutoSuggest(restful.Resource):
 
 class TwitterNearBy(restful.Resource):
 	def get(self, **kwargs):
-		parser.add_argument('title', type=str)
-		parser.add_argument('nearby', type=bool)
 
+		parser.add_argument('title', type=str)
+		parser.add_argument('nearby', type=str)
 		args = parser.parse_args()
 		qt = args.get('title', "")
-		nearby = args.get('nearby', False)
-		tweets = search_twitter(qt, nearby);
+		nearby = True
+		if(args.get('nearby') == "False"):
+			nearby = False
+		logger.info(args.get('nearby'))
+		tweets = search_twitter(qt, nearby)
 		return dict(tweets=tweets), 200
 
 

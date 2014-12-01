@@ -2,16 +2,16 @@
 
 angular.module('angularApp')
   .controller('RelatedCtrl', function ($scope, SearchResult, $stateParams, TwitterNearby) {
-  			 $scope.nearby = {text: "Show nearby tweets", status_bool:false, param:"False"}
+  			 $scope.nearby = {text: "Show Nearby tweets", status_bool:false, param:"False"}
              $scope.toggleNearby = function(){
-             	  var nearby = {text: "Show nearby tweets", status_bool:false, param:"False"};
              	  if($scope.nearby.status_bool){
-             	  		nearby = {text: "Show All tweets", status_bool:true, param:"True"};
-  			 			$scope.nearby = nearby;
-
+             	  	$scope.nearby = {text: "Show All tweets", status_bool:false, param:"True"};
+             	  }
+             	  else{
+             	  	$scope.nearby = {text: "Show Nearby tweets", status_bool:true, param:"False"};
              	  }
                   var res = TwitterNearby
-                    .get({title:$scope.currentArticle.wiki_article.title[0], nearby:nearby.param},
+                    .get({title:$scope.currentArticle.wiki_article.title[0], nearby:$scope.nearby.param},
                       function(data){
 						  $scope.currentArticle.related_tweets = data.tweets;
                       });

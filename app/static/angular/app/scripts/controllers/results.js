@@ -4,7 +4,7 @@
 angular.module('angularApp')
   .controller('ResultsCtrl', function ($scope, $rootScope, $state, Search, SearchResult) {
 	  							var searchParams = {};
-
+	  							$scope.max_items = 100;
 	  							var refreshPage = function (resultObject){
 							  			$scope.search_results = resultObject.search_results;
 							  			$scope.error_message = resultObject.error_message;
