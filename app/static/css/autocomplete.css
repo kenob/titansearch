@@ -19,6 +19,7 @@
   border-right: 1px solid #888;
   border-bottom: 1px solid #888;
   z-index: 1;
+  color:black;
 }
 
 .autocomplete li{
@@ -40,5 +41,5 @@
 
 .autocomplete li.active .highlight {
   background: #666;
-  color: #fff;
+  color: black;
 }
