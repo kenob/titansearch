@@ -60,16 +60,11 @@ def search_twitter(search_term, nearby_tweets):
             tweet_count = len(statuses);
         for i in xrange(tweet_count):
             results.append(statuses[i][u'text'])  
-
-        for result in results:
-            print result
-
         return results
     return results;
 
 def main():
     search_term = str(raw_input("Enter the search term : "))
-
     search_twitter(search_term, True);
 
 

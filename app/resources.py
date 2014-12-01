@@ -171,7 +171,7 @@ class TwitterNearBy(restful.Resource):
 	def get(self, **kwargs):
 		parser.add_argument('title', type=str)
 		args = parser.parse_args()
-		qt = args.get('q', "")
+		qt = args.get('title', "")
 		tweets = search_twitter(qt, True);
 		return dict(tweets=tweets), 200
 

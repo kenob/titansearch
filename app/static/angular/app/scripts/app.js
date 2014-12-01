@@ -92,8 +92,8 @@ angular.module('angularApp', [
       var res = AutoComplete
             .get({q:typed}, 
               function(data){
-                console.log(data);    
-                $rootScope.autoCompleteTerms = ['andy', 'murray'];
+                console.log(data.results);    
+                $rootScope.autoCompleteTerms.push('bad');
       });
     };
   }]);
