@@ -93,7 +93,6 @@ angular.module('angularApp', [
       var res = AutoComplete
             .get({q:typed}, 
               function(data){
-                console.log(data.results);    
                 $rootScope.autoCompleteTerms = data.results;
       });
           }
