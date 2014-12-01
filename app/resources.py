@@ -104,7 +104,7 @@ class SearchResult(restful.Resource):
 		related_tweets = []
 		wiki_article = dict()
 		news_articles = []
-
+		nearby = False;
 		wiki_article_solr = get_item(wiki, result_id)
 		if wiki_article_solr:
 			wiki_article = wiki_article_solr
@@ -133,7 +133,7 @@ class SearchResult(restful.Resource):
 
 		if query_term:
 			news_articles = search(news, query_term, defType="edismax", mm=2, qf="title^20.0+keywords^20.0+body^2.0")[0]
-		related_tweets = search_twitter(twitter_query) ;
+		related_tweets = search_twitter(twitter_query, nearby) ;
 		related_tweets = [html_parser.unescape(tweet) for tweet in related_tweets]
 		return dict(related_news=news_articles[:3], wiki_article=wiki_article, related_tweets=related_tweets), 200
 	def post(self, **kwargs):
@@ -167,9 +167,17 @@ class AutoSuggest(restful.Resource):
 		real_suggestion = real_suggestion.replace('u\"','\"');
 		return dict(results = real_suggestion.split(","))
 
+class TwitterNearBy(restful.Resource):
+	def get(self, **kwargs):
+		parser.add_argument('title', type=str)
+		args = parser.parse_args()
+		qt = args.get('q', "")
+		tweets = search_twitter(qt, True);
+		return dict(tweets=tweets), 200
 
 
 
+api.add_resource(Search, '/api/async/v1/')
 api.add_resource(AutoSuggest, '/api/async/v1/suggest')
 api.add_resource(SearchResult, '/api/async/v1/results/<wiki_id>')
-api.add_resource(Search, '/api/async/v1/')
+api.add_resource(TwitterNearBy, '/api/async/twitter_nearby')

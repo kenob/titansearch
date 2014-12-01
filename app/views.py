@@ -100,7 +100,10 @@ def related(result_id):
 	global initial_query 
 	initial_search_term = initial_query
 
-
+	nearby_tweets = False;
+	if 'near' in request.args:
+		if request.args['near'] == "true":
+			nearby_tweets = True;
 
 	wiki_article_solr = get_item(wiki, result_id)
 	if wiki_article_solr:
@@ -128,7 +131,7 @@ def related(result_id):
 	# twitter_query = " OR ".join(query_terms)
 
 	twitter_query = wiki_article["title"][0];
-	related_tweets = search_twitter(twitter_query ) ;
+	related_tweets = search_twitter(twitter_query, nearby_tweets) ;
 
 
 	print "tweets :" + str(related_tweets);
