@@ -13,7 +13,7 @@
 	    
             <form role="form" id="searchbar" ng-submit="search()">
 	            <div class="input-group custom-search-form">
-      			  <autocomplete attr-input-class="form-control" attr-input-id="search-text" ng-model="searchForm.q" data="autoCompleteTerms" on-type="completeTerm"></autocomplete>
+      			  <autocomplete attr-placeholder="" attr-input-class="form-control" attr-input-id="search-text" ng-model="searchForm.q" data="autoCompleteTerms" on-type="completeTerm"></autocomplete>
 	              <span class="input-group-btn">
 	              <button id="search-button" class="btn btn-default" type="submit"><!--change this for bg color-->
 	              <span class="glyphicon glyphicon-search"></span>
@@ -39,10 +39,13 @@
 
 <div ng-show="search_results.length < 1">
 	<h3 ng-bind="error_message"></h3>
-	<h3 ng-show="suggested_terms.length > 0">Did you mean: </h3>
-	<div ng-repeat-start="term in suggested_terms"></div>
-	<h4><a href="" ng-click = "searchForm.q = term; search(); " ng-bind="term"></a></h4>
-	<div ng-repeat-end></div>
+	<h3 ng-show="suggested_terms.length > 0">Did you mean: 
+	<ul class="suggest">
+	<li ng-repeat="term in suggested_terms"><a href="" ng-click = "searchForm.q = term; search(); " ng-bind="term"></a><span>, </span>
+	</li>
+	</ul>
+
+	</h3>
 </div>
 <div class="container" ng-hide="num_results < 1">
 <div class="row">

@@ -19,7 +19,7 @@
                   <div class="col-md-8 col-md-offset-2">
                      <form role="form" id="form" ng-submit="search()">
                         <div class="form-group">
-                            <input type="text" ng-model="searchForm.q" placeholder="Enter search terms" class="form-control" required>
+                            <autocomplete attr-placeholder="" attr-input-class="form-control" ng-model="searchForm.q" data="autoCompleteTerms" on-type="completeTerm"></autocomplete>
                         </div>
                      </form>
                   </div>

@@ -83,3 +83,16 @@ autocomplete li:hover{
   width: 100%;
   background-color: #4bf;
 }
+
+.suggest {
+  list-style: none;
+  padding: 0px 0px;
+}
+
+.suggest li {
+  display: inline;
+}
+
+.suggest li:last-of-type span {
+	display:none;
+}
