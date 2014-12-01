@@ -75,7 +75,7 @@ angular.module('angularApp', [
         }
     }
 })
-.run(['$rootScope','$sce', '$state', 'Search', 'AutoComplete', 'TwitterNearby', 
+.run(['$rootScope','$sce', '$state', 'Search', 'AutoComplete', 
     function($rootScope, $sce, $state, Search, AutoComplete, TwitterNearby){
             $rootScope.$state = $state;
             $rootScope.alerts = [];
@@ -100,14 +100,6 @@ angular.module('angularApp', [
                         $rootScope.autoCompleteTerms = data.results;
               });
                   }
-            };
-            $rootScope.getNearby = function(title){
-                  var res = TwitterNearby
-                    .get({title:title},
-                      function(data){
-                          return data.tweets;
-                      });
-                  return [];
             };
   }]);
 
