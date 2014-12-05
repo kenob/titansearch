@@ -7,6 +7,8 @@ from flask.ext.restful import reqparse
 from json import dumps
 from .search_twitter import search_twitter
 from app import html_parser
+import urllib
+import json
 
 
 api = restful.Api()
@@ -60,6 +62,7 @@ class Search(restful.Resource):
 			has_next = search_results_[2] > 1
 			has_previous = (page - 1) > 0
 			num_results = search_results_[3]
+			
 			for res in search_results:
 				_id = res['id']
 				if _id in result_snippets:
@@ -70,11 +73,25 @@ class Search(restful.Resource):
 				else:
 					del search_results[_id]
 
-		if search_results:
-			if len(search_results)>0:
-				error_message = ""
+		params = urllib.urlencode({'q': qt, 'wt': "json", 'indent' : "true" })
+	
+		did_you_mean = urllib.urlopen("http://localhost:8983/solr/wikiArticleCollection/spell?%s" % params)
+		did_you_mean_object = json.load(did_you_mean)
+		did_you_mean_words = [];
+		try: 
+			did_you_mean_words = [];
+			for word in did_you_mean_object["spellcheck"]["suggestions"][1]["suggestion"]:
+				did_you_mean_words.append(word["word"]);
+		except: 
+			did_you_mean_words = [];
 
-		return dict(search_results=search_results, error_message=error_message, query_term=qt, current_page=page, num_results=num_results), 200
+			if search_results:
+				if len(search_results)>0:
+					error_message = ""
+		suggested_terms = did_you_mean_words
+
+		return dict(search_results=search_results, error_message=error_message, query_term=qt, 
+					current_page=page, num_results=num_results, suggested_terms=suggested_terms), 200
 
 	def post(self,**kwargs):
 		return
@@ -87,7 +104,7 @@ class SearchResult(restful.Resource):
 		related_tweets = []
 		wiki_article = dict()
 		news_articles = []
-
+		nearby = False;
 		wiki_article_solr = get_item(wiki, result_id)
 		if wiki_article_solr:
 			wiki_article = wiki_article_solr
@@ -116,11 +133,55 @@ class SearchResult(restful.Resource):
 
 		if query_term:
 			news_articles = search(news, query_term, defType="edismax", mm=2, qf="title^20.0+keywords^20.0+body^2.0")[0]
-		related_tweets = search_twitter(twitter_query) ;
+		related_tweets = search_twitter(twitter_query, nearby) ;
 		related_tweets = [html_parser.unescape(tweet) for tweet in related_tweets]
 		return dict(related_news=news_articles[:3], wiki_article=wiki_article, related_tweets=related_tweets), 200
 	def post(self, **kwargs):
 		return
 
+class AutoSuggest(restful.Resource):
+	def get(self, **kwargs):
+		parser.add_argument('q', type=str)
+		args = parser.parse_args()
+		qt = args.get('q')
+		logger.info(qt)
+		if not qt:
+			return dict(results=[]),200
+		params = urllib.urlencode({"q":qt, 'wt': "json", 'indent' : "true" });
+		url = "http://localhost:8983/solr/wikiArticleCollection/suggest?%s" % params
+		logger.info(url)
+		suggestions = urllib.urlopen(url)
+		suggestions_object = json.load(suggestions);
+		suggestions_array = suggestions_object["spellcheck"]["suggestions"];
+		flag = 0;
+
+		for i in  xrange(len(suggestions_array)):
+			if suggestions_array[i]==u'collation':
+				flag = i;
+				break;
+		actual_suggestion = [];
+		for i in xrange(flag, len(suggestions_array) ):
+			if not suggestions_array[i]==u'collation':
+				actual_suggestion.append(suggestions_array[i]);
+		return dict(results = actual_suggestion)
+
+class TwitterNearBy(restful.Resource):
+	def get(self, **kwargs):
+
+		parser.add_argument('title', type=str)
+		parser.add_argument('nearby', type=str)
+		args = parser.parse_args()
+		qt = args.get('title', "")
+		nearby = True
+		if(args.get('nearby') == "False"):
+			nearby = False
+		logger.info(args.get('nearby'))
+		tweets = search_twitter(qt, nearby)
+		return dict(tweets=tweets), 200
+
+
+
 api.add_resource(Search, '/api/async/v1/')
+api.add_resource(AutoSuggest, '/api/async/v1/suggest')
 api.add_resource(SearchResult, '/api/async/v1/results/<wiki_id>')
+api.add_resource(TwitterNearBy, '/api/async/v1/twitter_nearby')

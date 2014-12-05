@@ -6,13 +6,14 @@
 	       <span class="sr-only">Toggle navigation</span>
 	       <span class="glyphicon glyphicon-search" style="color:#fff"></span>
 	       </button>
-	        <a class="navbar-brand" href="/index"><img src="../static/images/logo.png" alt="logo"></a>
+	        <a class="navbar-brand" href="/async"><img src="../static/images/logo.png" alt="logo"></a>
 	    </div>
 	    <div class="collapse navbar-collapse">
 	    <div id="search-box" class="col-lg-3">
+	    
             <form role="form" id="searchbar" ng-submit="search()">
 	            <div class="input-group custom-search-form">
-	              <input type="text" ng-model="searchForm.q" class="form-control" size="100" required/>
+      			  <autocomplete attr-placeholder="" attr-input-class="form-control" attr-input-id="search-text" ng-model="searchForm.q" data="autoCompleteTerms" on-type="completeTerm"></autocomplete>
 	              <span class="input-group-btn">
 	              <button id="search-button" class="btn btn-default" type="submit"><!--change this for bg color-->
 	              <span class="glyphicon glyphicon-search"></span>
@@ -26,18 +27,30 @@
 </header><!--/header-->
 <div class="container main">
 
-<p>Search Results for "<span style="color:red">{{query_term}}</span>"</p>
+<h3>Search Results for "<span style="color:#1bbc9b">{{query_term}}</span>"</h3>
 <div ng-repeat="result in search_results">
         <div>
 			<h2 data-toggle="modal" data-target="#myModal"><a ui-sref=".related({doc_id : result.id})">{{result.title[0]}}</a></h2>
 			<p><div ng-bind-html="result.wiki_body"></div></p>
-			<p><a href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></p>
+			<h5><a style="color:#1bbc9b" href="{{result.links[0]}}", target="_blank">View this article on Wikipedia</a></h5>
             <hr>
         </div>
 </div>
-<p ng-bind="error_message"></p>
+
+<div ng-show="search_results.length < 1">
+	<h3 ng-bind="error_message"></h3>
+	<h3 ng-show="suggested_terms.length > 0">Did you mean: 
+	<ul class="suggest">
+	<li ng-repeat="term in suggested_terms"><a href="" ng-click = "searchForm.q = term; search(); " ng-bind="term"></a><span>, </span>
+	</li>
+	</ul>
+
+	</h3>
+</div>
 <div class="container" ng-hide="num_results < 1">
-<pagination total-items="num_results" ng-model="current_page" ng-change="change()" class="pagination-lg"></pagination>
+<div class="row">
+<pagination total-items="num_results" ng-model="current_page" ng-change="change()" class="pagination-lg" total-items="max_items"></pagination>
+</div>
 </div>
 </div>
 

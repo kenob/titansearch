@@ -84,6 +84,7 @@ def get_wiki_articles(output_dir):
 		print "Solr request Unsuccessful"
 		return
 	words = q.get('words')
+	logger.info(words)
 	s = requests.Session()
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export"
 	pages = []
@@ -99,13 +100,13 @@ def get_wiki_articles(output_dir):
 				pages += pages_obtained
 		logger.info("%s page titles obtained for %s" % (len(pages_obtained), word))
 	page_params = ("%0A").join(pages)
-	logger.info("A total of %s page titles obtained, now getting pages from Wikipedia...")
+	logger.info("A total of %s page titles obtained, now getting pages from Wikipedia..." % len(pages))
 	from_ = "2000-01-27T20:25:56Z"
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export&pages=%s&offset=%s&limit=10000&action=submit"
 	url = "http://en.wikipedia.org/wiki/Special:Export/"
 	for i, page in enumerate(pages):
 		r = s.get(url+page)
-		with open(os.path.join(output_dir, "wiki_%s.xml" % i), 'wr') as out:
+		with open(os.path.join(output_dir, "wiki_%s.xml" % i), 'w') as out:
 			out.write(r.text.encode('utf8'))
 
 @manager.command

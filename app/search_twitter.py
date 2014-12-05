@@ -1,5 +1,6 @@
 import oauth2
-import urllib2 as urllib
+import urllib2 as urllib2
+import urllib
 import json
 from apikeys import Keys 
 api_key = Keys.api_key
@@ -14,8 +15,8 @@ http_method = "GET"
 
 _debug = 0
 
-http_handler  = urllib.HTTPHandler(debuglevel=_debug)
-https_handler = urllib.HTTPSHandler(debuglevel=_debug)
+http_handler  = urllib2.HTTPHandler(debuglevel=_debug)
+https_handler = urllib2.HTTPSHandler(debuglevel=_debug)
 
 signature_method_hmac_sha1 = oauth2.SignatureMethod_HMAC_SHA1()
 def twitterRequest(url, method, parameters):
@@ -28,7 +29,7 @@ def twitterRequest(url, method, parameters):
         encoded_post_data = None
         url = request.to_url()
 
-    opener = urllib.OpenerDirector()
+    opener = urllib2.OpenerDirector()
     opener.add_handler(http_handler)
     opener.add_handler(https_handler)
 
@@ -36,9 +37,13 @@ def twitterRequest(url, method, parameters):
 
     return response
 
-def search_twitter(search_term):
-    url = "https://api.twitter.com/1.1/search/tweets.json?q="+search_term
-
+def search_twitter(search_term, nearby_tweets):
+    if nearby_tweets == True:
+        params = urllib.urlencode({'q':search_term,'geocode':'43.018391,-78.696693,10000mi'});
+    else:
+        params = urllib.urlencode({'q':search_term});
+    url = "https://api.twitter.com/1.1/search/tweets.json?lang=en&%s" % params
+    print "twitter url : " + url
     print "search term : " + search_term
     parameters = []
     response = twitterRequest(url, "GET", parameters)
@@ -55,15 +60,12 @@ def search_twitter(search_term):
             tweet_count = len(statuses);
         for i in xrange(tweet_count):
             results.append(statuses[i][u'text'])  
-
-        for result in results:
-            print result
         return results
     return results;
 
 def main():
     search_term = str(raw_input("Enter the search term : "))
-    search_twitter(search_term);
+    search_twitter(search_term, True);
 
 
 

@@ -32,7 +32,8 @@ angular.module('angularApp', [
   'ngSanitize',
   'ui.router',
   'ui.router.stateHelper',
-  'ui.bootstrap.pagination'
+  'ui.bootstrap.pagination',
+  'autocomplete'
 ])
 .config(function ($stateProvider, $urlRouterProvider,  $resourceProvider) {
   //delete $httpProvider.defaults.headers.common['X-Requested-With'];
@@ -47,6 +48,12 @@ angular.module('angularApp', [
 })
 .factory('SearchResult', function($resource){
   return $resource("/api/async/v1/results/:id");
+})
+.factory('AutoComplete', function($resource){
+  return $resource("/api/async/v1/suggest");
+})
+.factory('TwitterNearby', function($resource){
+  return $resource("/api/async/v1/twitter_nearby");
 })
 .filter('addEllipsis', function () {
     return function (input, max) {
@@ -68,19 +75,33 @@ angular.module('angularApp', [
         }
     }
 })
-.run(['$rootScope','$sce', '$state', 'Search', function($rootScope, $sce, $state, Search){
-    $rootScope.$state = $state;
-    $rootScope.alerts = [];
-    $rootScope.searchForm = {};
-    $rootScope.search = function(){
-      var res = Search
-            .get($rootScope.searchForm, 
-              function(data){
-                $rootScope.searchResultObject = data;
-                $state.go('results',{},{reload : true});
+.run(['$rootScope','$sce', '$state', 'Search', 'AutoComplete', 
+    function($rootScope, $sce, $state, Search, AutoComplete, TwitterNearby){
+            $rootScope.$state = $state;
+            $rootScope.alerts = [];
+            $rootScope.searchForm = {};
+            $rootScope.searchForm.q = "";
+            $rootScope.autoCompleteTerms = [];
+
+            $rootScope.search = function(){
+              var res = Search
+                    .get($rootScope.searchForm, 
+                      function(data){
+                        $rootScope.searchResultObject = data;
+                        $state.go('results',{},{reload : true});
+                      });
+            };
+
+            $rootScope.completeTerm = function(typed){
+              if(typed.length>1){
+              var res = AutoComplete
+                    .get({q:typed}, 
+                      function(data){
+                        $rootScope.autoCompleteTerms = data.results;
               });
-    };
-}]);
+                  }
+            };
+  }]);
 
 
 

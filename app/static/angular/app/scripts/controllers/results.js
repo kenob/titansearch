@@ -4,7 +4,7 @@
 angular.module('angularApp')
   .controller('ResultsCtrl', function ($scope, $rootScope, $state, Search, SearchResult) {
 	  							var searchParams = {};
-
+	  							$scope.max_items = 100;
 	  							var refreshPage = function (resultObject){
 							  			$scope.search_results = resultObject.search_results;
 							  			$scope.error_message = resultObject.error_message;
@@ -14,6 +14,7 @@ angular.module('angularApp')
 							  			$scope.has_next = resultObject.has_next;
 							  			$scope.has_previous = resultObject.has_previous;
 							  			$scope.num_results = resultObject.num_results;
+							  			$scope.suggested_terms = resultObject.suggested_terms;
 	  							};
 
 	  							if(!$rootScope.searchResultObject){
