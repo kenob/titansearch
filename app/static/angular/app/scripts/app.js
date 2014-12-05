@@ -97,9 +97,12 @@ angular.module('angularApp', [
               var res = AutoComplete
                     .get({q:typed}, 
                       function(data){
-                        $rootScope.autoCompleteTerms = data.results;
+                        console.log(data.results);
+                        if($rootScope.autoCompleteTerms!=data.results){
+                          $rootScope.autoCompleteTerms = data.results;
+                        }
               });
-                  }
+              }
             };
   }]);
 

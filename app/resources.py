@@ -51,7 +51,8 @@ class Search(restful.Resource):
 			query_term = "+".join(query_terms)
 
 		search_results = None
-		search_results_ = search(wiki, query_term, page=page, rows=rows)
+		search_results_ = search(wiki, query_term, page=page, rows=rows, defType="edismax", mm=2, ps=3, 
+								qf="title^20.0+body^10.0", pf="title^20.0+body^20.0")
 		num_results = 0;
 
 		error_message = "No results found for your search!"
@@ -134,7 +135,8 @@ class SearchResult(restful.Resource):
 		query_term = "+".join(query_terms)
 
 		if query_term:
-			news_articles = search(news, query_term, defType="edismax", mm=2, qf="title^20.0+keywords^20.0+body^2.0")[0]
+			news_articles = search(news, query_term, defType="edismax", mm=2, ps=3, 
+								qf="title^20.0+keywords^20.0+body^2.0", pf="title^20.0+keywords^20.0+body^20.0")[0]
 		related_tweets = search_twitter(twitter_query, nearby) ;
 		related_tweets = [html_parser.unescape(tweet) for tweet in related_tweets]
 		return dict(related_news=news_articles[:3], wiki_article=wiki_article, related_tweets=related_tweets), 200

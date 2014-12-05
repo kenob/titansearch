@@ -16,7 +16,7 @@
 		            <ul class="list-group">
 		                <li class="list-group-item" ng-repeat="result in currentArticle.related_news">
 		                    <h5><a href="{{result['links'][0]}}" target= "_blank" ng-bind="result.title[0]"></a></h5>
-		                    <p ng-bind="result.news_body[0]"></p>
+		                    <p ng-bind="result.news_body[0] | addEllipsis:50"></p>
 		                </li>
 		            </ul>
 		        </div>
