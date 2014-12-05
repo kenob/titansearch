@@ -19,7 +19,7 @@
 		        </div>
 		        <div class="col-md-4" ng-show="currentArticle.related_tweets.length > 1">
 		            <h3>Social Media</h3>
-		            <ul class="list-group" ng-repeat="tweet in currentArticle.related_tweets track by tweet">
+		            <ul class="list-group" ng-repeat="tweet in currentArticle.related_tweets track by $id(tweet)">
 		                <li class="list-group-item">
 		                    <p>{{tweet}}</p>
 		                </li>

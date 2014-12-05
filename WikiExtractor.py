@@ -65,6 +65,9 @@ from htmlentitydefs import name2codepoint
 from app.keyword_extractor import extract_keywords
 import thread
 import os
+from nltk.corpus import stopwords
+
+stop = stopwords.words('english')
 
 ### PARAMS ####################################################################
 
@@ -136,10 +139,10 @@ def WikiDocument(out, id, title, text, get_keywords):
 
     clean_text = compact(text)
 
-    keywords = []
+    keywords = [i for i in title.split() if i not in stop]
 
-    if get_keywords:
-        keywords = extract_keywords(clean_text.encode('utf-8')).get('keywords', [])  
+    # if get_keywords:
+    #     keywords = extract_keywords(clean_text.encode('utf-8')).get('keywords', [])  
 
     kws = (', ').join(keywords) 
 

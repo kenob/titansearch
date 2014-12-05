@@ -50,7 +50,7 @@ class Search(restful.Resource):
 
 		search_results = None
 		search_results_ = search(wiki, query_term, page=page, rows=rows)
-		num_pages = 0;
+		num_results = 0;
 
 		error_message = "No results found for your search!"
 

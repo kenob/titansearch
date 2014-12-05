@@ -1,5 +1,5 @@
 from flask.ext.script import Manager
-from app import application, wiki, news, keyword_extractor
+from app import application, wiki, news, keyword_extractor, logger
 import os
 from urllib import *
 import json, time, requests
@@ -9,6 +9,7 @@ from app.utils import get_top_terms, get_keywords
 import time
 import html5lib
 from lxml import html
+from parse_reuters import parse_reuters as pr
 
 manager = Manager(application)
 
@@ -55,7 +56,7 @@ def refresh_index(instance):
 				break
 
 @manager.command
-def parse_wikimedia(input_dir = "E:/wikicorpus", 
+def parse_wikimedia(last_id, input_dir = "E:/wikicorpus", 
 					output_dir= "E:/wikicorpusclean"):
 	"""
 	Parses and generates keywords from Wikimedia articles
@@ -66,7 +67,8 @@ def parse_wikimedia(input_dir = "E:/wikicorpus",
 	get_keywords = False
 	if application.config.get('INDEX_KEYWORD_GENERATION'):
 		get_keywords = True
-	parse_wiki(input_dir, output_dir, 1024*1024, get_keywords)
+	last = parse_wiki(input_dir, output_dir, 1024*1024, get_keywords)
+	logger.info("this is the last id - %s, please save it and use it to run the command next time, to prevent documents from overwriting")
 
 @manager.command
 def get_wiki_articles(output_dir):
@@ -114,6 +116,11 @@ def test_kwextractor():
 			print k
 	else:
 		print "There was a connection problem"
+
+@manager.command
+def parse_reuters(reuters_folder='/home/kenob/reuters_corpus-90_cat/training', output_dir='here'):
+	pr(reuters_folder, output_dir)
+	logger.info('done!')
 
 @manager.command
 def test_topic_extractor():
