@@ -116,10 +116,12 @@ class SearchResult(restful.Resource):
 		keywords = wiki_article.get('keywords',[])
 
 		#TODO: For large documents, get keywords for random parts of the document only, to keep the kw list short enough
-		try:
-			keywords = get_keywords(wiki_article['wiki_body'][0].decode())
-		except:
-			keywords = get_keywords(parse_to_alphanumeric(wiki_article['wiki_body'][0]))
+		# try:
+		# 	keywords = get_keywords(wiki_article['wiki_body'][0])
+		# except:
+		# 	keywords = get_keywords(wiki_article['wiki_body'][0].decode())
+
+		# logger.info(keywords)
 
 		# if not application.config.get('INDEX_KEYWORD_GENERATION'):
 		# 	keywords = extract_keywords(wiki_article['wiki_body'][0].encode('utf-8')).get('keywords')

@@ -161,7 +161,10 @@ def WikiDocument(out, id, title, text, get_keywords):
         print >> out, line.encode('utf-8')
     print >> out, bodyfooter
     print >> out, keyhead
-    print >> out, kws
+    try:
+        print >> out, kws
+    except:
+        print >> out, compact(clean(kws))
     print >> out, keyfooter
     print >> out, footer
 

@@ -10,8 +10,11 @@ import time
 import html5lib
 from lxml import html
 from parse_reuters import parse_reuters as pr
+from sets import Set
+from nltk.stem.porter import PorterStemmer
 
 manager = Manager(application)
+porter_stemmer = PorterStemmer()
 
 @manager.command
 def runserver():
@@ -79,15 +82,22 @@ def get_wiki_articles(output_dir):
 	"""
 	if not os.path.exists(output_dir):
 		os.mkdir(output_dir)
-	q = get_top_terms("newsArticleCollection", "keywords", 100)
+	q = get_top_terms("newsArticleCollection", "persons", 100)
 	if q['status'] == 'Unsuccessful':
 		print "Solr request Unsuccessful"
 		return
-	words = q.get('words')
+	words_init = q.get('words')
+	words = Set()
+	for w in words_init:
+		w = w.replace(',', '')
+		words.update(w.split())
+	words = list(words)
+	# words_stemmed = [word.replace(',', '') for word in words]
+	# words = words + words_stemmed
 	logger.info(words)
 	s = requests.Session()
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export"
-	pages = {}
+	pages = Set()
 	for word in words:
 		r = s.post(url, data=dict(action="submit",catname=word, addcat=True))
 		doc = html5lib.parse(r.text)
@@ -97,7 +107,7 @@ def get_wiki_articles(output_dir):
 		for l in line:
 			if l:
 				pages_obtained = l.splitlines()
-				for pp i pages_obtained
+				for pp in pages_obtained:
 					pages.add(pp)
 		logger.info("%s page titles obtained for %s" % (len(pages_obtained), word))
 	page_params = ("%0A").join(list(pages))
