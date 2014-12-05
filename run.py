@@ -87,7 +87,7 @@ def get_wiki_articles(output_dir):
 	logger.info(words)
 	s = requests.Session()
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export"
-	pages = []
+	pages = {}
 	for word in words:
 		r = s.post(url, data=dict(action="submit",catname=word, addcat=True))
 		doc = html5lib.parse(r.text)
@@ -97,9 +97,10 @@ def get_wiki_articles(output_dir):
 		for l in line:
 			if l:
 				pages_obtained = l.splitlines()
-				pages += pages_obtained
+				for pp i pages_obtained
+					pages.add(pp)
 		logger.info("%s page titles obtained for %s" % (len(pages_obtained), word))
-	page_params = ("%0A").join(pages)
+	page_params = ("%0A").join(list(pages))
 	logger.info("A total of %s page titles obtained, now getting pages from Wikipedia..." % len(pages))
 	from_ = "2000-01-27T20:25:56Z"
 	url = "http://en.wikipedia.org/w/index.php?title=Special:Export&pages=%s&offset=%s&limit=10000&action=submit"

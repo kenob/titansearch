@@ -66,8 +66,11 @@ from app.keyword_extractor import extract_keywords
 import thread
 import os
 from nltk.corpus import stopwords
+from nltk.tag.stanford import NERTagger
 
 stop = stopwords.words('english')
+st = NERTagger('/home/kenob/stanford-ner-2014-06-16/classifiers/english.all.3class.distsim.crf.ser.gz',
+                '/home/kenob/stanford-ner-2014-06-16/stanford-ner.jar')
 
 ### PARAMS ####################################################################
 

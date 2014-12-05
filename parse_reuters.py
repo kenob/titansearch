@@ -1,13 +1,20 @@
 import os
 import sys
 import os
-from nltk.corpus import stopwords
+# from nltk.corpus import stopwords
+# from nltk.tag.stanford import NERTagger
 from app import logger
+from app.utils import get_keywords
 
-stop = stopwords.words('english')
+# stop = stopwords.words('english')
+# st = NERTagger('/home/kenob/stanford-ner-2014-06-16/classifiers/english.all.3class.distsim.crf.ser.gz',
+# 	'/home/kenob/stanford-ner-2014-06-16/stanford-ner.jar')
+
 
 def clean(text):
 	return ' '.join([''.join(e) for e in text.split() if e.isalnum()]).strip()
+def clean_total(text):
+	return ' '.join([''.join(e) for e in text.split() if e.isalpha()]).strip()
 
 def parse_reuters(directory, output_dir):
 	if not os.path.exists(output_dir):
@@ -31,36 +38,41 @@ def parse_reuters(directory, output_dir):
 				place = True
 				index += 1
 				keys = []
+				titlestring = ""
+				docdatastring = ""
 				with open(os.path.join(category_path, article)) as contents:
 					text = ""
 					for content in contents:
 						if not content.isspace():
 							if title:
 								header = '<head>\n'
-								print >> fileout, '<title>' + clean(content) + '</title>\n'
+								titlestring = '<title>' + clean(content) + '</title>\n'
 								title = False
-								print >> fileout, header
-								print >> fileout, '<docdata>'
-	  							print >> fileout, '<doc-id id-string="%s"/>' % (10000000 + index)
-	  							keys = [i for i in clean(content).lower().split() if i not in stop]
-								print >> fileout, '<identified-content>\n'
+	  							docdatastring = '<doc-id id-string="%s"/>' % (10000000 + index)
+	  							# keys = [i for i in clean_total(content).lower().split() if i not in stop]
 		  					elif author:
 								author = False
 								if '<AUTHOR>' in content:
 									content = content.replace('<AUTHOR>','').replace('</AUTHOR>','')
-								print >> fileout, '<classifier>' + clean(content) + '</classifier>\n'
-								print >> fileout, keyhead				
-								print >> fileout, (" ").join(keys + [cat])
-								print >> fileout, keyfooter
-								print >> fileout, '</identified-content>\n'
-								print >> fileout, '</docdata>\n'
-								print >> fileout, '</head>\n'
-								print >> fileout, bodyhead
+								text += clean(content)
 							else:
 								text += content
-					print >> fileout, clean(text)
+					cleaned_text = clean_total(text)
+					keys = get_keywords(cleaned_text)
+					print >>fileout, titlestring
+					print >> fileout, header
+					print >> fileout, '<docdata>'
+					print >> fileout, docdatastring
+					print >> fileout, '<identified-content>\n'
+					print >> fileout, keyhead				
+					print >> fileout, (" ").join(keys + [cat])
+					print >> fileout, keyfooter
+					print >> fileout, '</identified-content>\n'
+					print >> fileout, '</docdata>\n'
+					print >> fileout, '</head>\n'
+					print >> fileout, bodyhead
+					print >> fileout, clean(cleaned_text)
 					print >> fileout, bodyfooter
 					print >> fileout, footer
-		print >> fileout, "</mediawiki>"
 			
 			

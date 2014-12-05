@@ -2,7 +2,12 @@ from app import application, logger
 from urllib import *
 import re
 from .wiki_extractor import clean
-# from np_extractor import NPExtractor
+from nltk.corpus import stopwords
+from nltk.tag.stanford import NERTagger
+
+stop = stopwords.words('english')
+st = NERTagger('/home/kenob/stanford-ner-2014-06-16/classifiers/english.all.3class.distsim.crf.ser.gz',
+                '/home/kenob/stanford-ner-2014-06-16/stanford-ner.jar')
 
 base_url = application.config.get('SOLR_URI')
 
@@ -67,4 +72,7 @@ def get_keywords(text):
 	# np_extractor = NPExtractor(text)
 	# result = np_extractor.extract()
 	# return result
-	return []
+	s = st.tag(text.split())
+ 	i = list({j[0] for j in s if j[1]!=u'O'})
+ 	out = [ii for ii in i if ii.lower() not in stop]
+ 	return out
