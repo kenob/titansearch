@@ -1,0 +1,9 @@
+<html>
+<h1> Welcome to Reuters News </h1>
+{% if news_item %}
+<div class="col-md-4">
+    <h3>{{news_item.get('title',[])[0]}}</h3>
+    <p>{{news_item.get('news_body',[])[0]}}</p>
+</div>
+{% endif %}
+</html>

@@ -91,6 +91,8 @@ class Search(restful.Resource):
 					error_message = ""
 		suggested_terms = did_you_mean_words
 
+		logger.info('returning %s results' % num_results)
+
 		return dict(search_results=search_results, error_message=error_message, query_term=qt, 
 					current_page=page, num_results=num_results, suggested_terms=suggested_terms), 200
 
@@ -135,7 +137,7 @@ class SearchResult(restful.Resource):
 		query_term = "+".join(query_terms)
 
 		if query_term:
-			news_articles = search(news, query_term, defType="edismax", mm=2, ps=3, 
+			news_articles = search(news, query_term, defType="edismax", mm='75%25' , ps=3, 
 								qf="title^20.0+keywords^20.0+body^2.0", pf="title^20.0+keywords^20.0+body^20.0")[0]
 		related_tweets = search_twitter(twitter_query, nearby) ;
 		related_tweets = [html_parser.unescape(tweet) for tweet in related_tweets]
@@ -153,7 +155,6 @@ class AutoSuggest(restful.Resource):
 			return dict(results=[]),200
 		params = urllib.urlencode({"q":qt, 'wt': "json", 'indent' : "true" });
 		url = "http://localhost:8983/solr/wikiArticleCollection/suggest?%s" % params
-		logger.info(url)
 		suggestions = urllib.urlopen(url)
 		suggestions_object = json.load(suggestions);
 		suggestions_array = suggestions_object["spellcheck"]["suggestions"];

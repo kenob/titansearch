@@ -7,6 +7,7 @@ from .wiki_extractor import clean
 from .search_twitter import search_twitter
 import urllib
 import json
+from utils import get_item
 
 initial_query = "";	
 #TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
@@ -145,3 +146,10 @@ def related(result_id):
 @application.route('/async')
 def index_async():
 	return render_template('index_async.html');
+
+@application.route('/reuters_news_page/<page_id>')
+def reuters_news_page(page_id):
+	news_item = get_item(news, page_id)
+	return render_template('reuters.html', **locals())
+
+

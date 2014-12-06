@@ -24,7 +24,8 @@ def search(collection, query_string="*:*", page=1, rows=10, **kwargs):
 
 	additional_args = ('&').join(["%s=%s" % (key,kwargs[key]) for key in kwargs])
 	try:
-		conn = urlopen('%s%s/select/?&q=%s&wt=python&%s' % (base_url, collection, query_string, additional_args))
+		url = '%s%s/select/?&q=%s&wt=python&%s' % (base_url, collection, query_string, additional_args)
+		conn = urlopen(url)
 		result = eval(conn.read())
 		numRes = result['response'].get('numFound')
 		results_left = int(numRes) - (start + rows)
