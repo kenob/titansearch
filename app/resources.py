@@ -137,7 +137,7 @@ class SearchResult(restful.Resource):
 		query_term = "+".join(query_terms)
 
 		if query_term:
-			news_articles = search(news, query_term, defType="edismax", mm='75%25' , ps=3, 
+			news_articles = search(news, query_term, defType="edismax", mm='2<-25%25' , ps=3, 
 								qf="title^20.0+keywords^20.0+body^2.0", pf="title^20.0+keywords^20.0+body^20.0")[0]
 		related_tweets = search_twitter(twitter_query, nearby) ;
 		related_tweets = [html_parser.unescape(tweet) for tweet in related_tweets]
