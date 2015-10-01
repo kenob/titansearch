@@ -2,12 +2,12 @@ import os
 import sys
 import os
 # from nltk.corpus import stopwords
-# from nltk.tag.stanford import NERTagger
+# from nltk.tag.stanford import StanfordNERTagger
 from app import logger
 from app.utils import get_keywords
 
 # stop = stopwords.words('english')
-# st = NERTagger('/home/kenob/stanford-ner-2014-06-16/classifiers/english.all.3class.distsim.crf.ser.gz',
+# st = StanfordNERTagger('/home/kenob/stanford-ner-2014-06-16/classifiers/english.all.3class.distsim.crf.ser.gz',
 # 	'/home/kenob/stanford-ner-2014-06-16/stanford-ner.jar')
 
 

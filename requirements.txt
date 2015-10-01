@@ -14,3 +14,6 @@ requests==2.4.3
 six==1.8.0
 wsgiref==0.1.2
 oauth2==1.5.211
+nltk
+html5lib
+lxml
