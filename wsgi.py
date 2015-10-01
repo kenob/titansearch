@@ -1,0 +1,1 @@
+from starter import app as application
