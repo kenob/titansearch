@@ -11,8 +11,8 @@ from utils import get_item
 
 initial_query = "";	
 #TODO: We might need to seperate the search page from the home page, having a post method on '/' doesn't seem right
-@application.route('/', methods=['GET', 'POST'])
-@application.route('/index', methods=['GET', 'POST'])
+@application.route('/static/', methods=['GET', 'POST'])
+@application.route('/static/index', methods=['GET', 'POST'])
 def index():
 	form = SearchForm();
 	global initial_query 
@@ -46,7 +46,7 @@ def suggest():
 	print real_suggestion;
 	return str(real_suggestion);
 
-@application.route('/results', methods=['GET', 'POST'])
+@application.route('/static/results', methods=['GET', 'POST'])
 def results():
 	qt = request.args.get('q')
 	query_terms = qt.split()
@@ -91,7 +91,7 @@ def results():
 
 	return render_template('results.html', **locals());
 
-@application.route('/related/<result_id>')
+@application.route('/static/related/<result_id>')
 def related(result_id):
 	related_news = []
 	related_tweets = []
@@ -143,7 +143,7 @@ def related(result_id):
 
 	return render_template('related.html',**locals());
 
-@application.route('/async')
+@application.route('/')
 def index_async():
 	return render_template('index_async.html');
 
