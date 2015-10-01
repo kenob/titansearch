@@ -1,1 +1,1 @@
-from starter import app as application
+from starter import application
