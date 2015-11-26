@@ -16,4 +16,4 @@ wsgiref==0.1.2
 oauth2==1.5.211
 nltk
 html5lib
-lxml
+#lxml
